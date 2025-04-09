@@ -140,7 +140,10 @@ const Calendar: React.FC = () => {
           customButtons={{
             addEventButton: {
               text: "Add Event +",
-              click: openModal,
+              click: () => {
+                resetModalFields();
+                openModal();
+              },
             },
           }}
         />
