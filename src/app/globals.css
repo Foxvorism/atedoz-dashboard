@@ -176,28 +176,27 @@
 */
 @layer base {
   /* Apply custom styles to the scrollbar */
-::-webkit-scrollbar {
-  width: 10px; /* Set the width of the scrollbar */
-  height: auto; /* Set the height of the scrollbar */
-}
+  ::-webkit-scrollbar {
+    width: 10px; /* Set the width of the scrollbar */
+    height: auto; /* Set the height of the scrollbar */
+  }
 
-/* Style the scrollbar track (background of the scrollbar) */
-::-webkit-scrollbar-track {
-  background: #f1f1f1; /* Light gray background */
-}
+  /* Style the scrollbar track (background of the scrollbar) */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Light gray background */
+  }
 
-/* Style the scrollbar thumb (the draggable part) */
-::-webkit-scrollbar-thumb {
-  background-color: var(--color-brand-600); /* Dark gray color */
-  border-radius: 10px; /* Rounded corners */
-  border: 2px solid #f1f1f1; /* Add a border to create contrast */
-}
+  /* Style the scrollbar thumb (the draggable part) */
+  ::-webkit-scrollbar-thumb {
+    background-color: var(--color-brand-600); /* Dark gray color */
+    border-radius: 10px; /* Rounded corners */
+    border: 2px solid #f1f1f1; /* Add a border to create contrast */
+  }
 
-/* Change the thumb color on hover */
-::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-brand-500); /* Darker color when hovered */
-}
-
+  /* Change the thumb color on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-brand-500); /* Darker color when hovered */
+  }
 
   *,
   *::before,
@@ -235,6 +234,18 @@
 
 @utility menu-item-icon {
   @apply text-gray-500 group-hover:text-gray-700 dark:text-gray-400;
+}
+
+@utility menu-item-icon-warning {
+  @apply text-[var(--color-success-500)] group-hover:text-[var(--color-success-700)] dark:text-gray-400;
+}
+
+@utility menu-item-icon-warning {
+  @apply text-[var(--color-warning-500)] group-hover:text-[var(--color-warning-700)] dark:text-gray-400;
+}
+
+@utility menu-item-icon-error {
+  @apply text-[var(--color-error-500)] group-hover:text-[var(--color-error-700)] dark:text-gray-400;
 }
 
 @utility menu-item-icon-active {
