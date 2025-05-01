@@ -19,7 +19,7 @@ interface CalendarEvent extends EventInput {
   };
 }
 
-const Calendar: React.FC = () => {
+const Schedule: React.FC = () => {
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
     null
   );
@@ -140,7 +140,10 @@ const Calendar: React.FC = () => {
           customButtons={{
             addEventButton: {
               text: "Add Event +",
-              click: openModal,
+              click: () => {
+                resetModalFields();
+                openModal();
+              },
             },
           }}
         />
@@ -280,4 +283,4 @@ const renderEventContent = (eventInfo: EventContentArg) => {
   );
 };
 
-export default Calendar;
+export default Schedule;
