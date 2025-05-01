@@ -13,7 +13,7 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle1, pageTitle2 }) =
         className="text-xl font-semibold text-gray-800 dark:text-white/90"
         x-text="pageName"
       >
-        {!pageTitle2 ? pageTitle1 : pageTitle2 + " " + pageTitle1.slice(0, -1)}
+        {!pageTitle2 ? pageTitle1 : pageTitle2 + " " + pageTitle1 /*.slice(0, -1)*/}
       </h2>
       <nav>
         <ol className="flex items-center gap-1.5">
