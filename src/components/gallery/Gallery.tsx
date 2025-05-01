@@ -68,13 +68,13 @@ const Gallery: React.FC = () => {
                 {sortedPhotos.map((photo) => (
                     <div
                         key={photo.id}
-                        className="relative w-full pt-[100%] bg-gray-100 rounded-lg overflow-hidden hover:scale-[102%]"
+                        className="relative w-full bg-gray-100 rounded-lg overflow-hidden hover:scale-[102%]"
                         onClick={() => handlePhotoClick(photo)} // Handle click event for first modal
                     >
                         <img
                             src={photo.url}
                             alt={photo.alt}
-                            className="absolute top-0 left-0 w-full h-full object-cover cursor-pointer"
+                            className="aspect-square w-full h-full object-cover cursor-pointer"
                         />
                     </div>
                 ))}
@@ -82,7 +82,7 @@ const Gallery: React.FC = () => {
 
             {/* First Modal to display selected photo's ID and URL */}
             {isModalPhotoOpen && selectedPhoto && (
-                <Modal isOpen={isModalPhotoOpen} onClose={closeModalPhoto} className="max-w-[45vw]">
+                <Modal isOpen={isModalPhotoOpen} onClose={closeModalPhoto} className="lg:max-w-[45vw] max-w-[80vw]">
                     <div className="w-full">
                         <img
                             src={selectedPhoto.url}
@@ -95,7 +95,7 @@ const Gallery: React.FC = () => {
 
             {/* Second Modal for "Add Photo" */}
             {isModalAddOpen && (
-                <Modal isOpen={isModalAddOpen} onClose={closeModalAdd} className="max-w-[700px] p-6 lg:p-10">
+                <Modal isOpen={isModalAddOpen} onClose={closeModalAdd} className="max-w-[90vw] lg:max-w-[25vw] p-6 lg:p-10">
                     <div className="flex flex-col px-2 overflow-y-auto custom-scrollbar">
                         <div>
                             <h5 className="mb-2 font-semibold text-gray-800 modal-title text-theme-xl dark:text-white/90 lg:text-2xl">
@@ -107,7 +107,7 @@ const Gallery: React.FC = () => {
                             </p>
                         </div>
                         <div className="mt-8">
-                            <div>
+                            <form>
                                 <div className="mb-3">
                                     <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                         Chose Photo from your File
@@ -123,11 +123,11 @@ const Gallery: React.FC = () => {
                                     {/* Preview the selected image */}
                                     {imagePreview && (
                                         <div className="mb-4 flex justify-center items-center">
-                                            <img src={imagePreview} alt="Preview" className="w-[20vw] aspect-square object-cover rounded-lg border border-gray-300 bg-transparent" />
+                                            <img src={imagePreview} alt="Preview" className="w-full aspect-square object-cover rounded-lg border border-gray-300 bg-transparent" />
                                         </div>
                                     )}
                                 </div>
-                                <div>
+                                <div className="mb-3">
                                     <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
                                         Alternate Text
                                     </label>
@@ -140,7 +140,16 @@ const Gallery: React.FC = () => {
                                         className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                                     />
                                 </div>
-                            </div>
+                                <button 
+                                    className="flex w-full justify-center rounded-lg border h-auto text-center p-3 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
+                                    onClick={handleAddPhotoClick}  // Open the second modal
+                                >
+                                    <div className="mr-1">
+                                        <GridIcon />
+                                    </div>
+                                    Add Photo to the Gallery
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </Modal>
