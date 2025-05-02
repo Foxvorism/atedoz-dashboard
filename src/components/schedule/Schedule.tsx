@@ -143,11 +143,12 @@ const Schedule: React.FC = () => {
           <FullCalendar
             ref={calendarRef}
             plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            initialView="dayGridMonth"
+            initialView="timeGridWeek"
             headerToolbar={{
               left: "prev,next",
               center: "title",
-              right: "dayGridMonth,timeGridWeek,timeGridDay",
+              // right: "dayGridMonth,timeGridWeek,timeGridDay",
+              right: "timeGridWeek",
             }}
             events={events}
             selectable={true}

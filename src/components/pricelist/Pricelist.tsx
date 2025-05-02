@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import {
   Table,
   TableBody,
@@ -44,16 +45,16 @@ const formatPrice = (price: number) => {
 export default function Pricelist() {
   return (
     <>
-      <button 
-        className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
-        // onClick={handleAddPhotoClick}  // Open the second modal
-      >
-          <div className="mr-1">
+      <Link href="/pricelist/input">
+        <button 
+          className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
+          >
+            <div className="mr-1">
               <DollarLineIcon />
           </div>
           Add a New Pricelist
-      </button>
-    
+        </button>
+      </Link>
 
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
         <div className="max-w-full overflow-x-auto">
