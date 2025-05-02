@@ -49,11 +49,6 @@ const mainItems: NavItem[] = [
     name: "Transaction",
     path: "/transaction",
   },
-  {
-    icon: <ShootingStarIcon />,
-    name: "Reviews",
-    path: "/reviews",
-  },
   // {
   //   icon: <GridIcon />,
   //   name: "Dashboard",
