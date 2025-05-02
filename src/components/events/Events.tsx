@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { TableIcon } from "../../icons/index";
+import Link from "next/link";
 
 const Events: React.FC = () => {
     const [selectedEvent, setSelectedEvent] = useState<{ id: number; url: string, alt: string, title: string } | null>(null);
@@ -24,15 +25,16 @@ const Events: React.FC = () => {
 
     return(
         <div className="">
-            <button 
-                className="flex w-full justify-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
-                // onClick={handleAddPhotoClick}  // Open the second modal
-            >
-                <div className="mr-1">
-                    <TableIcon />
-                </div>
-                Create a new Event
-            </button>
+            <Link href="/events/input">
+                <button 
+                    className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
+                >
+                    <div className="mr-1">
+                        <TableIcon />
+                    </div>
+                    Create a new Event
+                </button>
+            </Link>
 
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {sortedEvents.map((event) => (

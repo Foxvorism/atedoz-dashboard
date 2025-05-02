@@ -3,14 +3,12 @@ import React, { useState } from "react";
 import { useModal } from "@/hooks/useModal";
 import { Modal } from "@/components/ui/modal";
 import { GridIcon } from "../../icons/index";
+import Link from "next/link";
 
 const Gallery: React.FC = () => {
     const { isOpen: isModalPhotoOpen, openModal: openModalPhoto, closeModal: closeModalPhoto } = useModal();
-    const { isOpen: isModalAddOpen, openModal: openModalAdd, closeModal: closeModalAdd } = useModal();
     
     const [selectedPhoto, setSelectedPhoto] = useState<{ id: number; url: string, alt: string } | null>(null);
-    const [imagePreview, setImagePreview] = useState<string | null>(null); // For previewing the selected image
-    const [altText, setAltText] = useState<string>(""); // For the alt text input
 
     const photos = [
         { id: 1, url: "https://images.unsplash.com/photo-1744566917536-792e7f28c4c8?q=80&w=2564&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Photo 1" },
@@ -29,40 +27,18 @@ const Gallery: React.FC = () => {
         openModalPhoto();  // Open the modal
     };
 
-    // Handle file input change (image preview)
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result as string); // Set the image preview
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    // Handle alt text input change
-    const handleAltTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setAltText(e.target.value);
-    };
-
-    // Function to open the second modal (Add photo modal)
-    const handleAddPhotoClick = () => {
-        openModalAdd();  // Open the second modal when the button is clicked
-    };
-
     return (
         <div className="">
-            {/* Button to open the "Add Photo" modal */}
-            <button 
-                className="flex w-full justify-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
-                onClick={handleAddPhotoClick}  // Open the second modal
-            >
-                <div className="mr-1">
-                    <GridIcon />
-                </div>
-                Add Photo to the Gallery
-            </button>
+            <Link href="/gallery/input">
+                <button 
+                className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
+                >
+                    <div className="mr-1">
+                        <GridIcon />
+                    </div>
+                    Add Photo to the Gallery
+                </button>
+            </Link>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
                 {sortedPhotos.map((photo) => (
@@ -89,68 +65,6 @@ const Gallery: React.FC = () => {
                             alt={selectedPhoto.alt}
                             className="rounded-xl object-cover aspect-square"
                         />
-                    </div>
-                </Modal>
-            )}
-
-            {/* Second Modal for "Add Photo" */}
-            {isModalAddOpen && (
-                <Modal isOpen={isModalAddOpen} onClose={closeModalAdd} className="max-w-[90vw] lg:max-w-[25vw] p-6 lg:p-10">
-                    <div className="flex flex-col px-2 overflow-y-auto custom-scrollbar">
-                        <div>
-                            <h5 className="mb-2 font-semibold text-gray-800 modal-title text-theme-xl dark:text-white/90 lg:text-2xl">
-                                Add Photo to the Gallery
-                            </h5>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                                Plan your next big moment: schedule or edit an event to stay on
-                                track
-                            </p>
-                        </div>
-                        <div className="mt-8">
-                            <form>
-                                <div className="mb-3">
-                                    <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                        Chose Photo from your File
-                                    </label>
-                                    {/* Input for selecting an image */}
-                                    <input
-                                        type="file"
-                                        onChange={handleFileChange}
-                                        accept="image/*"
-                                        className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 mb-3"
-                                    />
-                                    
-                                    {/* Preview the selected image */}
-                                    {imagePreview && (
-                                        <div className="mb-4 flex justify-center items-center">
-                                            <img src={imagePreview} alt="Preview" className="w-full aspect-square object-cover rounded-lg border border-gray-300 bg-transparent" />
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="mb-3">
-                                    <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                                        Alternate Text
-                                    </label>
-                                    {/* Input for the alt text */}
-                                    <input
-                                        type="text"
-                                        value={altText}
-                                        onChange={handleAltTextChange}
-                                        placeholder="Enter alt text for the image"
-                                        className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
-                                    />
-                                </div>
-                                <button 
-                                    className="flex w-full justify-center rounded-lg border h-auto text-center p-3 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
-                                    onClick={handleAddPhotoClick}  // Open the second modal
-                                >
-                                    <div className="mr-1">
-                                        <GridIcon />
-                                    </div>
-                                    Add Photo to the Gallery
-                                </button>
-                            </form>
-                        </div>
                     </div>
                 </Modal>
             )}
