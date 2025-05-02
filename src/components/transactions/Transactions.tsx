@@ -8,7 +8,7 @@ import {
 } from "../ui/table";
 
 import {
-    DollarLineIcon, PencilIcon, TrashBinIcon
+    TaskIcon, PencilIcon, TrashBinIcon
 } from "../../icons/index";
 
 import Badge from "../ui/badge/Badge";
@@ -71,7 +71,7 @@ export default function Transactions() {
         // onClick={handleAddPhotoClick}  // Open the second modal
       >
           <div className="mr-1">
-              <DollarLineIcon />
+              <TaskIcon />
           </div>
           Add a New Transaction
       </button>
