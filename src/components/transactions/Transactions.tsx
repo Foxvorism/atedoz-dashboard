@@ -1,4 +1,5 @@
-import React from "react";
+'use client';
+import React,  { useEffect, useState } from "react";
 import {
     Table,
     TableBody,
@@ -14,56 +15,100 @@ import {
 import Badge from "../ui/badge/Badge";
 import Image from "next/image";
 
+// interface Transactions {
+//     id: number;
+//     user: {
+//         id: number,
+//         name: string,
+//     };
+//     package: {
+//         id: number,
+//         name: string,
+//     }
+//     schedule: {
+//         id: number,
+//         date: string,
+//         time: string,
+//         studio: {
+//             id: number,
+//             name: string,
+//         }
+//     }
+//     status: string;
+// }
+
 interface Transactions {
+  id: number;
+  user: {
     id: number;
-    user: {
-        id: number,
-        name: string,
-    };
-    package: {
-        id: number,
-        name: string,
-    }
-    schedule: {
-        id: number,
-        date: string,
-        time: string,
-        studio: {
-            id: number,
-            name: string,
-        }
-    }
-    status: string;
+    name: string;
+    email: string;
+  };
+  package: {
+    id: number;
+    nama_paket: string;
+    harga: string;
+    deskripsi: string;
+    thumbnail: string | null;
+  };
+  photo_studio: {
+    id: number;
+    nama_studio: string;
+    deskripsi_posisi: string;
+  };
+  order_date: string;
+  start_time: string;
+  end_time: string;
+  status: string;
+  admin_confirmed: number;
 }
 
+
+
 // Define the table data using the interface
-const tableData: Transactions[] = [
-    {
-        id: 1,
-        user: {
-            id: 1,
-            name: "Velis"
-        },
-        package: {
-            id: 1,
-            name: "Studio in Bogor Baru Branch"
-        },
-        schedule: {
-            id: 1,
-            date: "5 May 2025",
-            time: "10.00 - 11.00",
-            studio: {
-                id: 1,
-                name: "Atedoz Space Bogor Baru Branch",
-            }
-        },
-        status: "Pending",
-    },
-];
+// const tableData: Transactions[] = [
+//     {
+//         id: 1,
+//         user: {
+//             id: 1,
+//             name: "Velis"
+//         },
+//         package: {
+//             id: 1,
+//             name: "Studio in Bogor Baru Branch"
+//         },
+//         schedule: {
+//             id: 1,
+//             date: "5 May 2025",
+//             time: "10.00 - 11.00",
+//             studio: {
+//                 id: 1,
+//                 name: "Atedoz Space Bogor Baru Branch",
+//             }
+//         },
+//         status: "Pending",
+//     },
+// ];
 
 
 
 export default function Transactions() {
+  const [transactions, setTransactions] = useState<Transactions[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/orders")
+      .then((res) => res.json())
+      .then((data) => {
+        setTransactions(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
+  }, []);
+  
   return (
     <>
       <button 
@@ -131,8 +176,8 @@ export default function Transactions() {
 
               {/* Table Body */}
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                {tableData.map((transaction, index) => (
-                  <TableRow key={transaction.id}>
+                {transactions.map((transaction, index) => (
+                  <TableRow key={index + 1}>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         {index + 1}
                     </TableCell>
@@ -140,13 +185,13 @@ export default function Transactions() {
                         { transaction.user.name}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {transaction.package.name}
+                        {transaction.package.nama_paket}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {transaction.schedule.date} | {transaction.schedule.time}
+                        {transaction.order_date} | {transaction.start_time} - {transaction.end_time}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {transaction.schedule.studio.name}
+                        {transaction.photo_studio.nama_studio}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                     <Badge
