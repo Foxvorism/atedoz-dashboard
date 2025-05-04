@@ -1,20 +1,17 @@
 "use client";
 import axios from 'axios';
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import ComponentCard from '../common/ComponentCard';
 import Label from '../form/Label';
 import Input from '../form/input/InputField';
-// import { ChevronDownIcon, EyeCloseIcon, EyeIcon } from '../../icons';
 
-export default function PricelistInput() {
+export default function PricelistEdit({ id }: { id: number }) {
 
     const [message, setMessage] = useState("");
-
-    const [open, setOpen] = useState(false)
-
-    const [pricelist, setPricelistData] = useState([]);
-
+    const [open, setOpen] = useState(false);
+    
+    // Initialize pricelist as an object, not an array
     const [pricelists, setPricelists] = useState({
         id: 0,
         nama_paket: "",
@@ -23,12 +20,57 @@ export default function PricelistInput() {
         thumbnail: null
     });
 
+    const getDetailPricelist = async (id: number) => {
+        try {
+            const response = await axios.get(
+                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages/${id}`,
+                {
+                    headers: {
+                        'content-type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                    }
+                }
+            );
 
+            const data = response.data.data;
 
+            if (data) {
+                setPricelists({
+                    id: data.id,
+                    nama_paket: data.nama_paket,
+                    harga: data.harga,
+                    deskripsi: data.deskripsi,
+                    thumbnail: data.thumbnail || null,
+                });
+            } else {
+                console.error("No data found for this pricelist");
+            }
 
-    const createPricelist = async (e: FormEvent) => {
+        } catch (error) {
+            console.error("Gagal mengambil detail pricelist:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (id) {
+            getDetailPricelist(id);
+        }
+    }, [id]);
+
+    const updatePricelist = async (e: React.FormEvent) => {
         e.preventDefault();
-    
+
+        if (pricelists.id === 0) {
+            console.error("ID is undefined or 0, cannot update");
+            Swal.fire({
+                icon: 'error',
+                title: 'ID tidak valid',
+                text: 'Data Pricelist tidak ditemukan.',
+                showConfirmButton: true,
+            });
+            return;
+        }
+
         Swal.fire({
             title: 'Loading...',
             text: 'Mohon tunggu sebentar...',
@@ -37,116 +79,86 @@ export default function PricelistInput() {
                 Swal.showLoading();
             }
         });
-    
-        const bodyFormData = new FormData();
-        bodyFormData.append('nama_paket', pricelists.nama_paket);
-        bodyFormData.append('harga', String(Number(pricelists.harga)));
-        bodyFormData.append('deskripsi', pricelists.deskripsi);
-        if (pricelists.thumbnail) {
-            bodyFormData.append('thumbnail', pricelists.thumbnail);
-        }
-    
+
+        const pricelistData = {
+            nama_paket: pricelists.nama_paket,
+            harga: pricelists.harga,
+            deskripsi: pricelists.deskripsi,
+            thumbnail: pricelists.thumbnail,
+        };
+
         try {
-            const res = await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages`,
-                bodyFormData,
+            const response = await axios.put(
+                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages/${pricelists.id}`,
+                pricelistData,
                 {
                     headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                    }
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                    },
                 }
             );
-            console.log(res.data);
-    
-            // Refresh data
-            getPriceListData();
-    
-            // Reset form
+
+            const data = response.data?.data;
+
+            if (!data) {
+                console.error("Data tidak ditemukan dalam respons:", response.data);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Data tidak ditemukan',
+                    text: 'Tidak ada data layanan dengan ID tersebut.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                return;
+            }
+
+            // Reset state after successful update
             setPricelists({
                 id: 0,
-                nama_paket: "",
-                harga: "",
-                deskripsi: "",
+                nama_paket: '',
+                harga: '',
+                deskripsi: '',
                 thumbnail: null
             });
-    
-            setOpen(false);
+
             Swal.close();
-    
-            // ✅ Tambahkan notifikasi sukses
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: 'Paket harga berhasil ditambahkan.',
-                timer: 2000,
-                showConfirmButton: false
-            });
-        } catch (error) {
-            console.error(error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Terjadi kesalahan saat mengirim data.',
-            });
-        }
-    };
-    
-
-    const getPriceListData = async () => {
-        try {
-            const token = localStorage.getItem('access_token');
-            if (!token) return;
-
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages`, {
-                headers: {
-                    'content-type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                }
-            });
-
-            if (response.data.data) {
-                setPricelistData(response.data.data);
-                console.log(response.data.data);
-            }
+            setOpen(false);
         } catch (error) {
             if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
                 Swal.fire({
                     icon: 'error',
                     title: error.response.data.message,
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 1500,
                 });
+                const logout = () => {
+                    localStorage.removeItem('token');
+                    window.location.href = '/signin';
+                };
+                logout();
             } else {
-                console.error("Server error:", error);
                 Swal.fire({
                     icon: 'error',
-                    title: 'error terjadi',
-                    text: 'mohon coba lagi nanti.',
+                    title: 'Error terjadi',
+                    text: 'Mohon coba lagi nanti.',
                     showConfirmButton: false,
-                    timer: 1500
+                    timer: 1500,
                 });
             }
         }
     };
 
-
-    useEffect(() => {
-        getPriceListData();
-    }, []);
-
-
-
     return (
-        <form onSubmit={createPricelist}>
-            <ComponentCard title="New Pricelist Form" href="/pricelist">
+        <form onSubmit={updatePricelist}>
+            <ComponentCard title="Edit Pricelist Form" href="/pricelist">
                 <div className="space-y-6">
                     <div>
                         <Label>Service Name</Label>
                         <Input
                             type="text"
                             placeholder="Masukan nama layanan"
-                            name="nama"
+                            name="nama_paket"
                             value={pricelists.nama_paket}
                             onChange={(e) => setPricelists({ ...pricelists, nama_paket: e.target.value })}
                         />
@@ -183,7 +195,7 @@ export default function PricelistInput() {
                             type="submit"
                             className="flex w-full justify-center text-lg items-center rounded-lg border h-auto text-center p-2 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
                         >
-                            Submit a New Package
+                            Save Changes
                         </button>
                     </div>
                 </div>
