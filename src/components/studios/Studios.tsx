@@ -48,7 +48,7 @@ export default function Studios() {
 
   const getStudioData = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/studios`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/studios`, {
         headers: {
           'content-type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
