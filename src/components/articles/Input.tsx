@@ -1,17 +1,34 @@
 "use client";
-import React, { useState, FC, ReactNode, FormEvent } from 'react';
+import React, { useState, useEffect, FC, ReactNode, FormEvent } from 'react';
 import ComponentCard from '../common/ComponentCard';
 import Label from '../form/Label';
 import Input from '../form/input/InputField';
 import TextArea from '../form/input/TextArea';
 import { useDropzone } from "react-dropzone";
 import { ChevronDownIcon, EyeCloseIcon, EyeIcon } from '../../icons';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default function ArticleInput() {
 
+    const [message, setMessage] = useState("");
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [articleData, setArticleData] = useState({
+        judul: "",
+        content: "",
+        thumbnail: null as File | null, 
+    });
+
     const onDrop = (acceptedFiles: File[]) => {
-        console.log("Files dropped:", acceptedFiles);
-        // Handle file uploads here
+        const file = acceptedFiles[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string);
+                setArticleData({ ...articleData, thumbnail: file });
+            };
+            reader.readAsDataURL(file);
+        }
     };
     
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -24,23 +41,93 @@ export default function ArticleInput() {
         },
     });
     
-    const [message, setMessage] = useState("");
+    const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setArticleData({ ...articleData, judul: e.target.value });
+      };
+      
+      const handleContentChange = (value: string) => {
+        setArticleData({ ...articleData, content: value });
+      };
 
-    // Handle file input change (image preview)
-    const [imagePreview, setImagePreview] = useState<string | null>(null); // For previewing the selected image
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result as string); // Set the image preview
-            };
-            reader.readAsDataURL(file);
+    const createArticle = async (e: FormEvent) => {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Mohon tunggu sebentar...',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
+        const bodyFormData = new FormData();
+        bodyFormData.append('judul', articleData.judul);
+        bodyFormData.append('content', articleData.content);
+        if (articleData.thumbnail) {
+            bodyFormData.append('thumbnail', articleData.thumbnail);
+        }
+
+        try {
+            const res = await axios.post(
+                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/articles`,
+                bodyFormData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        
+                    }
+                }
+            );
+
+            console.log(res.data);
+            
+            // Reset form
+            setArticleData({
+                judul: "",
+                content: "",
+                thumbnail: null
+            });
+
+            if (res.data.thumbnail) {
+                let imageUrl = res.data.thumbnail;
+
+  // Jika hanya nama file, tambahkan path secara manual
+  if (!imageUrl.startsWith("http") && !imageUrl.startsWith("/")) {
+    imageUrl = `${process.env.NEXT_PUBLIC_BACKEND_HOST}/storage/thumbnails/${imageUrl}`;
+  } else if (imageUrl.startsWith("/")) {
+    imageUrl = `${process.env.NEXT_PUBLIC_BACKEND_HOST}${imageUrl}`;
+  }
+
+  console.log("Final image URL:", imageUrl);
+  setImagePreview(imageUrl);
+}
+            Swal.close();
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: 'Artikel berhasil ditambahkan.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+
+            // Reset judul dan konten, tapi pertahankan preview jika ada URL dari server
+            setArticleData({
+                judul: "",
+                content: "",
+                thumbnail: null,
+            });
+        } catch (error) {
+            console.error(error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Terjadi kesalahan saat mengirim data.',
+            });
         }
     };
 
   return (
-    <form>
+    < form onSubmit={createArticle}>
         <ComponentCard title="New Article Form" href="/articles">
             <div className="space-y-6">
                 <div>
@@ -76,7 +163,7 @@ export default function ArticleInput() {
                                 }`}
                             >
                                 {/* Hidden Input */}
-                                <input {...getInputProps()} onChange={handleFileChange} />
+                                <input {...getInputProps()} />
 
                                 <div className="dz-message flex flex-col items-center m-0!">
                                     {/* Icon Container */}
@@ -118,14 +205,18 @@ export default function ArticleInput() {
 
                 <div>
                     <Label>Article Title</Label>
-                    <Input type="text" placeholder="Masukan judul artikel" />
+                    <Input 
+                    type="text" 
+                    placeholder="Masukan judul artikel" 
+                    value={articleData.judul}
+                    onChange={handleTitleChange} />
                 </div>
                 
                 <div>
                     <Label>Content</Label>
                     <TextArea
-                        value={message}
-                        onChange={(value) => setMessage(value)}
+                        value={articleData.content}
+                        onChange={handleContentChange}
                         rows={10}
                         placeholder="Masukan konten artikel"
                     />
