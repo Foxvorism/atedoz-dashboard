@@ -6,36 +6,27 @@ import { Dropdown } from "../ui/dropdown/Dropdown";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
 
-  const [userName, setUserName] = useState("");
+  useEffect(() => {
+    const storedUser = getUser();
+    if (storedUser && storedUser.name && storedUser.email) {
+      setUser(storedUser);
+    }
+  }, []);
 
-  const UserHeader = () => {
-    const [userName, setUserName] = useState([]);
-  
-    useEffect(() => {
-      const user = getUser();
-      if (user && user.name) {
-        setUserName(user.name);
-      }
-    }, []);
+  const toggleDropdown = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setIsOpen(prev => !prev);
+  };
 
-function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-  e.stopPropagation();
-  setIsOpen((prev) => !prev);
-}
-
-  function closeDropdown() {
-    setIsOpen(false);
-  }
   return (
     <div className="relative">
       <button
-        onClick={toggleDropdown} 
+        onClick={toggleDropdown}
         className="flex items-center text-gray-700 dark:text-gray-400 dropdown-toggle"
       >
-
-        <span className="block mr-1 font-medium text-theme-sm">Hello, {userName}</span>
-
+        <span className="block mr-1 font-medium text-theme-sm">Hello, {user?.name}</span>
         <svg
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
@@ -58,15 +49,15 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
       <Dropdown
         isOpen={isOpen}
-        onClose={closeDropdown}
+        onClose={UserDropdown}
         className="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-            {userName}
+            {user?.name}
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
-            randomuser@pimjo.com
+            {user?.email}
           </span>
         </div>
         <Link
@@ -93,5 +84,4 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
       </Dropdown>
     </div>
   );
-}
 }

@@ -23,12 +23,8 @@ export default function PricelistInput() {
         thumbnail: null
     });
 
-
-
-
     const createPricelist = async (e: FormEvent) => {
         e.preventDefault();
-    
         Swal.fire({
             title: 'Loading...',
             text: 'Mohon tunggu sebentar...',
@@ -95,7 +91,7 @@ export default function PricelistInput() {
 
     const getPriceListData = async () => {
         try {
-            const token = localStorage.getItem('access_token');
+            const token = localStorage.getItem('token');
             if (!token) return;
 
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages`, {

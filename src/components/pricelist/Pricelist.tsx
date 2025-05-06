@@ -16,31 +16,6 @@ import {
   DollarLineIcon, PencilIcon, TrashBinIcon
 } from "../../icons/index";
 
-
-// interface Pricelist {
-//   id: number;
-//   name: string;
-//   price: number;
-//   desc: string;
-// }
-
-
-
-// const tableData: Pricelist[] = [
-//   {
-//     id: 1,
-//     name: "Studio at Bogor Baru Branch",
-//     price: 200000,
-//     desc: "Price is for an hour",
-//   },
-//   {
-//     id: 2,
-//     name: "Additional Photographer",
-//     price: 100000,
-//     desc: "Price is for an hour",
-//   },
-// ];
-
 const formatPrice = (price: number) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 };
@@ -59,10 +34,8 @@ export default function Pricelist() {
         }
       });
 
-      // Karena response langsung array, langsung set
       if (Array.isArray(response.data)) {
         setPricelistData(response.data);
-        console.log("📦 Data paket:", response.data);
       } else {
         console.warn("⚠️ Format response tidak sesuai harapan:", response.data);
       }
@@ -114,7 +87,7 @@ export default function Pricelist() {
             `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages/${id}`,
             {
               headers: {
-                'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
               }
             }
           );
@@ -136,22 +109,9 @@ export default function Pricelist() {
     });
   };
 
-
-
-
-
   useEffect(() => {
     getPriceListData();
   }, []);
-
-  useEffect(() => {
-    if (pricelist.length > 0) {
-      console.log("✅ Pricelist data telah berhasil dimuat.");
-    } else {
-      console.log("⚠️ Tidak ada data pricelist ditemukan.");
-    }
-  }, [pricelist]);
-
 
   return (
     <>

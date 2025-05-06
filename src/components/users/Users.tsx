@@ -81,7 +81,7 @@ export default function Users() {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/users`, {
         headers: {
           'content-type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
       });
   
@@ -115,13 +115,6 @@ export default function Users() {
     getUserData();
   }, []);
 
-    useEffect(() => {
-      if (userData.length > 0) {
-        console.log("✅ User data telah berhasil dimuat.");
-      } else {
-        console.log("⚠️ Tidak ada data user ditemukan.");
-      }
-    }, [userData]);
 
   return (
     <>

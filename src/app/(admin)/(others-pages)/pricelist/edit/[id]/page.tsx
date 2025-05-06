@@ -2,28 +2,19 @@ import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import PricelistEdit from "@/components/pricelist/Edit";
 
 export const metadata = {
-  title: "Edit Pricelist | Atedoz Space Admin Dashboard",
+  title: "Edit Pricelist",
   description:
-    "This is Next.js Calendar page for TailAdmin Tailwind CSS Admin Dashboard Template",
+    "Atedoz Space Admin Dashboard",
 };
 
-interface PageProps {
-  params: {
-    id: string;
-  };
-}
-
-export default function EditPricelistPage({ params }: PageProps) {
-  const id = parseInt(params.id);
-
-  if (isNaN(id)) {
-    return <div>Invalid ID</div>; // Optional: display something when ID is invalid
-  }
+export default async function EditPricelistPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   return (
     <div>
       <PageBreadcrumb pageTitle2="Edit" pageTitle1="Pricelist" />
-      <PricelistEdit id={id} />
+      <PricelistEdit id={Number(id)} />
     </div>
   );
 }
+
