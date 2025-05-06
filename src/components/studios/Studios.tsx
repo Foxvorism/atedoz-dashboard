@@ -16,32 +16,6 @@ import {
   ListIcon, PencilIcon, TrashBinIcon
 } from "../../icons/index";
 
-// interface Studios {
-//   id: number;
-//   studio: string;
-//   latitude: string;
-//   longitude: string;
-//   desc: string;
-// }
-
-// // Define the table data using the interface
-// const tableData: Studios[] = [
-//   {
-//     id: 1,
-//     studio: "Atedoz Space Bogor Baru",
-//     latitude: "-6.591612319327254",
-//     longitude: "106.81014535373673",
-//     desc: "Cabang Bogor Baru",
-//   },
-//   {
-//     id: 2,
-//     studio: "Atedoz Space G.g Kelor",
-//     latitude: "-6.580193548718884",
-//     longitude: "106.77196462860871",
-//     desc: "Cabang G.g Kelor",
-//   },
-// ];
-
 export default function Studios() {
 
   const [studio, setStudioData] = useState<any[]>([]);
@@ -81,6 +55,56 @@ export default function Studios() {
       }
     }
   };
+
+  const deletePrice = async (id: number) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Loading...',
+          text: 'Mohon tunggu sebentar...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        try {
+          // Pastikan id yang dikirimkan adalah valid
+          const res = await axios.delete(
+            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/studios/${id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              }
+            }
+          );
+          await getStudioData();  // Refresh data setelah dihapus
+          Swal.fire(
+            'Deleted!',
+            'Your studio data has been deleted.',
+            'success'
+          );
+        } catch (error) {
+          console.error('Error while deleting the price:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed to Delete',
+            text: 'Terjadi kesalahan saat menghapus data.',
+          });
+        }
+      }
+    });
+  };
+
+
   useEffect(() => {
     getStudioData();
   }, []);
@@ -146,13 +170,13 @@ export default function Studios() {
 
               {/* Table Body */}
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                {studio.map((studios, index) => (
+                {studio.map((studios: any, index) => (
                   <TableRow key={studios.id}>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         {index + 1}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        { studios.nama_studio}
+                        {studios.nama_studio}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         {studios.longitude}
@@ -165,9 +189,12 @@ export default function Studios() {
                     </TableCell>
                     <TableCell className="flex items-center px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                       <span className="w-4 mr-3 cursor-pointer menu-item-icon-warning">
-                        <PencilIcon />
+                        <Link href={`/studios/edit/${studios.id}`}>
+                          <PencilIcon />
+                        </Link>
                       </span>
-                      <span className="w-4 cursor-pointer menu-item-icon-error">
+                      <span className="w-4 cursor-pointer menu-item-icon-error"
+                      onClick={() => deletePrice(studios.id)}>
                         <TrashBinIcon />
                       </span>
                     </TableCell>
