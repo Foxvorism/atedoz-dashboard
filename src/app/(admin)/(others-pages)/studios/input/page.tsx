@@ -1,12 +1,11 @@
-import StudioInput from "@/components/studios/Input";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
+import StudioInput from "@/components/studios/Input";
 import { Metadata } from "next";
-import React from "react";
 
 export const metadata: Metadata = {
-    title: "Input Studio | Atedoz Space Admin Dashboard",
+    title: "Input Studio",
     description:
-      "This is Next.js Calender page for TailAdmin  Tailwind CSS Admin Dashboard Template",
+      "Atedoz Space Admin Dashboard",
     // other metadata
   };
   
