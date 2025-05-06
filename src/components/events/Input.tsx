@@ -1,19 +1,40 @@
 "use client";
-import React, { useState, FC, ReactNode, FormEvent } from 'react';
+import React, { useState, FormEvent } from 'react';
 import ComponentCard from '../common/ComponentCard';
 import Label from '../form/Label';
 import Input from '../form/input/InputField';
 import TextArea from '../form/input/TextArea';
-import { useDropzone } from "react-dropzone";
 import DatePicker from '../form/date-picker';
+import { useDropzone } from "react-dropzone";
+import axios from 'axios';
+import Swal from 'sweetalert2';
+
 
 export default function EventInput() {
+    
+    const [message, setMessage] = useState("");
+    const [imagePreview, setImagePreview] = useState<string | null>(null);
+    const [eventDetails, setEventDetails] = useState({
+        nama_event: "",
+        deskripsi_event: "",
+        tanggal_event: "",
+        thumbnail: null as File | null,
+        longitude: "",
+        latitude: ""
+    });
 
     const onDrop = (acceptedFiles: File[]) => {
-        console.log("Files dropped:", acceptedFiles);
-        // Handle file uploads here
+        const file = acceptedFiles[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImagePreview(reader.result as string);
+                setEventDetails(prev => ({ ...prev, thumbnail: file }));
+            };
+            reader.readAsDataURL(file);
+        }
     };
-    
+
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: {
@@ -23,24 +44,95 @@ export default function EventInput() {
             "image/svg+xml": [],
         },
     });
-    
-    const [message, setMessage] = useState("");
 
-    // Handle file input change (image preview)
-    const [imagePreview, setImagePreview] = useState<string | null>(null); // For previewing the selected image
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result as string); // Set the image preview
-            };
-            reader.readAsDataURL(file);
-        }
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setEventDetails({ ...eventDetails, [name]: value });
     };
 
+    const handleDescriptionChange = (value: string) => {
+        setEventDetails({ ...eventDetails, deskripsi_event: value });
+    };
+
+    const handleDateChange = (tanggal_event: string) => {
+        setEventDetails({ ...eventDetails, tanggal_event });
+    };
+
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  
+  Swal.fire({
+    title: 'Loading...',
+    text: 'Mohon tunggu sebentar...',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+
+  const formData = new FormData();
+  formData.append("nama_event", eventDetails.nama_event);
+  formData.append("tanggal_event", eventDetails.tanggal_event);
+  formData.append("deskripsi_event", eventDetails.deskripsi_event || "");
+  if (eventDetails.longitude) {
+    formData.append("longitude", eventDetails.longitude.toString());
+  }
+  if (eventDetails.latitude) {
+    formData.append("latitude", eventDetails.latitude.toString());
+  }
+
+  if (eventDetails.thumbnail instanceof File) {
+    formData.append("thumbnail", eventDetails.thumbnail);
+  }
+
+  try {
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/events`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    console.log("Event berhasil dibuat:", response.data);
+
+    Swal.close();
+    Swal.fire({
+      icon: 'success',
+      title: 'Berhasil!',
+      text: 'Event berhasil ditambahkan.',
+      timer: 2000,
+      showConfirmButton: false
+    });
+
+    // Reset
+    setEventDetails({
+      nama_event: "",
+      deskripsi_event: "",
+      tanggal_event: "",
+      thumbnail: null,
+      longitude: "",
+      latitude: ""
+    });
+    setImagePreview(null);
+
+    
+
+} catch (error) {
+    console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Terjadi kesalahan saat mengirim data.',
+                });
+            }
+        };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
         <ComponentCard title="New Event Form" href="/events">
             <div className="space-y-6">
                 <div>
@@ -55,7 +147,7 @@ export default function EventInput() {
                                     className="flex justify-center items-center text-sm w-7 h-7 rounded-md font-bold border text-center p-2 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
                                     onClick={() => {
                                         setImagePreview(null);
-                                        window.location.reload(); 
+                                        setEventDetails(prev => ({ ...prev, thumbnail: null }));
                                     }}
                                 >
                                     X
@@ -76,7 +168,7 @@ export default function EventInput() {
                                 }`}
                             >
                                 {/* Hidden Input */}
-                                <input {...getInputProps()} onChange={handleFileChange} />
+                                <input {...getInputProps()}  />
 
                                 <div className="dz-message flex flex-col items-center m-0!">
                                     {/* Icon Container */}
@@ -118,7 +210,12 @@ export default function EventInput() {
 
                 <div>
                     <Label>Event Title</Label>
-                    <Input type="text" placeholder="Masukan judul acara" />
+                    <Input 
+                    type="text"
+                    name="nama_event"
+                    value={eventDetails.nama_event}
+                    onChange={handleInputChange}
+                    placeholder="Masukan judul acara"/>
                 </div>
 
                 <div>
@@ -127,8 +224,7 @@ export default function EventInput() {
                         label="Event Date"
                         placeholder="Select a date"
                         onChange={(dates, currentDateString) => {
-                            // Handle your logic
-                            console.log({ dates, currentDateString });
+                            handleDateChange(currentDateString);
                         }}
                     />
                 </div>
@@ -136,11 +232,34 @@ export default function EventInput() {
                 <div>
                     <Label>Event Description</Label>
                     <TextArea
-                        value={message}
-                        onChange={(value) => setMessage(value)}
+                        value={eventDetails.deskripsi_event}
+                        onChange={handleDescriptionChange}
                         rows={10}
                         placeholder="Masukan deskripsi acara"
                     />
+
+                <div className="space-y-4">
+                <Label>Longitude</Label>
+                <Input
+                    type="text"
+                    name="longitude"
+                    value={eventDetails.longitude}
+                    onChange={handleInputChange}
+                    placeholder="Masukan longitude (opsional)"
+                />
+                </div>
+
+                <div className="space-y-4">
+                <Label>Latitude</Label>
+                <Input
+                    type="text"
+                    name="latitude"
+                    value={eventDetails.latitude}
+                    onChange={handleInputChange}
+                    placeholder="Masukan latitude (opsional)"
+                />
+                </div>
+
                 </div>
 
                 <div>
