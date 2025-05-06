@@ -1,5 +1,9 @@
-import React from "react";
+'use client'
+
+import axios from "axios";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import {
   Table,
   TableBody,
@@ -12,33 +16,75 @@ import {
   ListIcon, PencilIcon, TrashBinIcon
 } from "../../icons/index";
 
-interface Studios {
-  id: number;
-  studio: string;
-  latitude: string;
-  longitude: string;
-  desc: string;
-}
+// interface Studios {
+//   id: number;
+//   studio: string;
+//   latitude: string;
+//   longitude: string;
+//   desc: string;
+// }
 
-// Define the table data using the interface
-const tableData: Studios[] = [
-  {
-    id: 1,
-    studio: "Atedoz Space Bogor Baru",
-    latitude: "-6.591612319327254",
-    longitude: "106.81014535373673",
-    desc: "Cabang Bogor Baru",
-  },
-  {
-    id: 2,
-    studio: "Atedoz Space G.g Kelor",
-    latitude: "-6.580193548718884",
-    longitude: "106.77196462860871",
-    desc: "Cabang G.g Kelor",
-  },
-];
+// // Define the table data using the interface
+// const tableData: Studios[] = [
+//   {
+//     id: 1,
+//     studio: "Atedoz Space Bogor Baru",
+//     latitude: "-6.591612319327254",
+//     longitude: "106.81014535373673",
+//     desc: "Cabang Bogor Baru",
+//   },
+//   {
+//     id: 2,
+//     studio: "Atedoz Space G.g Kelor",
+//     latitude: "-6.580193548718884",
+//     longitude: "106.77196462860871",
+//     desc: "Cabang G.g Kelor",
+//   },
+// ];
 
 export default function Studios() {
+
+  const [studio, setStudioData] = useState<any[]>([]);
+
+  const getStudioData = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/studios`, {
+        headers: {
+          'content-type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        }
+      });
+
+      if (Array.isArray(response.data)) {
+        setStudioData(response.data);
+      } else {
+        console.warn("⚠️ Format response tidak sesuai harapan:", response.data);
+      }
+
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
+        Swal.fire({
+          icon: 'error',
+          title: error.response.data.message,
+          showConfirmButton: false,
+          timer: 1500
+        });
+      } else {
+        console.error("Server error:", error);
+        Swal.fire({
+          icon: 'error',
+          title: 'error terjadi',
+          text: 'mohon coba lagi nanti.',
+          showConfirmButton: false,
+          timer: 1500
+        });
+      }
+    }
+  };
+  useEffect(() => {
+    getStudioData();
+  }, []);
+
   return (
     <>
       <Link href="/studios/input">
@@ -100,28 +146,28 @@ export default function Studios() {
 
               {/* Table Body */}
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                {tableData.map((studios, index) => (
+                {studio.map((studios, index) => (
                   <TableRow key={studios.id}>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         {index + 1}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        { studios.studio}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {studios.latitude}
+                        { studios.nama_studio}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         {studios.longitude}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {studios.desc}
+                        {studios.latitude}
                     </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400 flex items-center">
-                      <span className="w-4 menu-item-icon-warning mr-3 cursor-pointer">
+                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        {studios.deskripsi_posisi}
+                    </TableCell>
+                    <TableCell className="flex items-center px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                      <span className="w-4 mr-3 cursor-pointer menu-item-icon-warning">
                         <PencilIcon />
                       </span>
-                      <span className="w-4 menu-item-icon-error cursor-pointer">
+                      <span className="w-4 cursor-pointer menu-item-icon-error">
                         <TrashBinIcon />
                       </span>
                     </TableCell>

@@ -1,23 +1,22 @@
-// app/api/set-token/route.ts
-import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-    const { token } = await req.json()
+  const { access_token } = await req.json();
 
-    if (!token) {
-        return NextResponse.json({ error: 'Token is missing' }, { status: 400 })
-    }
+  if (!access_token) {
+    return NextResponse.json({ error: 'Token is missing' }, { status: 400 });
+  }
 
-    const res = NextResponse.json({ message: 'Token set' })
+  // Simpan token di cookie
+  const cookieStore = await cookies();
+  cookieStore.set('token', access_token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 7, // 7 hari
+  });
 
-    // Simpan token di cookie
-    res.cookies.set("token", token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        path: "/", // berlaku untuk semua route
-        maxAge: 60 * 60 * 24 * 7, // 7 hari
-    })
-
-    return res
+  return NextResponse.json({ message: 'Token set' });
 }

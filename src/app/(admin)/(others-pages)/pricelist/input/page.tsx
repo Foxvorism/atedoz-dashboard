@@ -1,12 +1,11 @@
-import PricelistInput from "@/components/pricelist/Input";
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
+import PricelistInput from "@/components/pricelist/Input";
 import { Metadata } from "next";
-import React from "react";
 
 export const metadata: Metadata = {
-    title: "Input Pricelist | Atedoz Space Admin Dashboard",
+    title: "Input Pricelist",
     description:
-      "This is Next.js Calender page for TailAdmin  Tailwind CSS Admin Dashboard Template",
+      "Atedoz Space Admin Dashboard",
     // other metadata
   };
   
