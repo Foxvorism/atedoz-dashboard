@@ -88,7 +88,7 @@ const handleSubmit = async (e: React.FormEvent) => {
 
   try {
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/events`,
+      `${process.env.NEXT_PUBLIC_BACKEND_HOST}/events`,
       formData,
       {
         headers: {

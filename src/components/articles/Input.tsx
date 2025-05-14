@@ -69,7 +69,7 @@ export default function ArticleInput() {
 
         try {
             const res = await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/articles`,
+                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/articles`,
                 bodyFormData,
                 {
                     headers: {
