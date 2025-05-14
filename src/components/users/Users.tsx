@@ -78,7 +78,7 @@ export default function Users() {
   const getUserData = async () => {
     try {
 
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/users`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/users`, {
         headers: {
           'content-type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,

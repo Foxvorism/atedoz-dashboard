@@ -40,7 +40,7 @@ export default function StudioInput() {
 
         try {
             const res = await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/studios`,
+                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/studios`,
                 bodyFormData,
                 {
                     headers: {
@@ -89,7 +89,7 @@ export default function StudioInput() {
             const token = localStorage.getItem('token');
             if (!token) return;
 
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/packages`, {
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${token}`,
