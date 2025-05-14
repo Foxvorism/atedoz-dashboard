@@ -31,13 +31,13 @@ export default function StudioInput() {
                 Swal.showLoading();
             }
         });
-    
+
         const bodyFormData = new FormData();
         bodyFormData.append('nama_studio', studio.nama_studio);
         bodyFormData.append('longitude', String(parseFloat(studio.longitude)));
-        bodyFormData.append('latitude', String(parseFloat(studio.latitude)));        
+        bodyFormData.append('latitude', String(parseFloat(studio.latitude)));
         bodyFormData.append('deskripsi_posisi', studio.deskripsi_posisi);
-    
+
         try {
             const res = await axios.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_HOST}/studios`,
@@ -50,10 +50,10 @@ export default function StudioInput() {
                 }
             );
             console.log(res.data);
-    
+
             // Refresh data
             getStudioData();
-    
+
             // Reset form
             setStudio({
                 id: 0,
@@ -62,10 +62,10 @@ export default function StudioInput() {
                 latitude: "",
                 deskripsi_posisi: ""
             });
-    
+
             setOpen(false);
             Swal.close();
-    
+
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
@@ -82,7 +82,7 @@ export default function StudioInput() {
             });
         }
     };
-    
+
 
     const getStudioData = async () => {
         try {
@@ -123,7 +123,7 @@ export default function StudioInput() {
 
 
     useEffect(() => {
-    getStudioData();
+        getStudioData();
     }, []);
 
     return (
@@ -133,11 +133,11 @@ export default function StudioInput() {
                     <div>
                         <div>
                             <Label>Studio Name</Label>
-                            <Input 
-                            type="text" 
-                            placeholder="Masukan nama studio" 
-                            value={studio.nama_studio}
-                            onChange={(e) => setStudio({ ...studio, nama_studio: e.target.value })}
+                            <Input
+                                type="text"
+                                placeholder="Masukan nama studio"
+                                value={studio.nama_studio}
+                                onChange={(e) => setStudio({ ...studio, nama_studio: e.target.value })}
                             />
                         </div>
                     </div>
@@ -145,20 +145,20 @@ export default function StudioInput() {
                         <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
                             <div>
                                 <Label>Latitude</Label>
-                                <Input 
-                                type="text" 
-                                placeholder="Masukan koordinat garis lintang" 
-                                value={studio.latitude}
-                                onChange={(e) => setStudio({ ...studio, latitude: e.target.value })}
+                                <Input
+                                    type="text"
+                                    placeholder="Masukan koordinat garis lintang"
+                                    value={studio.latitude}
+                                    onChange={(e) => setStudio({ ...studio, latitude: e.target.value })}
                                 />
                             </div>
                             <div>
                                 <Label>Longitude</Label>
-                                <Input 
-                                type="text" 
-                                placeholder="Masukan koordinat garis bujur"
-                                value={studio.longitude}
-                                onChange={(e) => setStudio({ ...studio, longitude: e.target.value })}
+                                <Input
+                                    type="text"
+                                    placeholder="Masukan koordinat garis bujur"
+                                    value={studio.longitude}
+                                    onChange={(e) => setStudio({ ...studio, longitude: e.target.value })}
                                 />
                             </div>
                         </div>
@@ -174,7 +174,7 @@ export default function StudioInput() {
                     </div>
 
                     <div>
-                        <button 
+                        <button
                             type="submit"
                             className="flex w-full justify-center text-lg items-center rounded-lg border h-auto text-center p-2 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
                         >
