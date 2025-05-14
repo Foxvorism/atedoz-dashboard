@@ -79,7 +79,7 @@ export default function Studios() {
         try {
           // Pastikan id yang dikirimkan adalah valid
           const res = await axios.delete(
-            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/studios/${id}`,
+            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/studios/${id}`,
             {
               headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,

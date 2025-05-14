@@ -19,7 +19,7 @@ export default function PricelistEdit({ id }: { id: number }) {
     const fetchPricelistById = async () => {
         try {
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages/${id}`,
+            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/packages/${id}`,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export default function PricelistEdit({ id }: { id: number }) {
     
         try {
           await axios.put(
-            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages/${pricelist.id}`,
+            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/packages/${pricelist.id}`,
             {
               nama_paket: pricelist.nama_paket,
               harga: pricelist.harga,
