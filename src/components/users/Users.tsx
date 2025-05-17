@@ -172,43 +172,54 @@ export default function Users() {
 
               {/* Table Body */}
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                {userData.map((item: any, index) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      {index + 1}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400" key={item.name}>
-                      {item.name}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      <Badge
-                        size="sm"
-                        color={
-                          item.role === "Admin"
-                            ? "success"
-                            : item.role === "Customer"
-                            ? "warning"
-                            : "error"
-                        }
-                      >
-                        {item.role}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      {item.email}
-                    </TableCell>
-                    <TableCell className="flex items-center px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      <Link href={`/users/edit/${item.id}`} className="flex items-center justify-center">
-                        <span className="w-4 mr-5 cursor-pointer menu-item-icon-warning">
-                          <PencilIcon />
-                        </span>
-                      </Link>
-                        <span className="w-4 cursor-pointer menu-item-icon-error">
-                          <TrashBinIcon />
-                        </span>
+              {userData.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className="px-4 py-3 text-center text-theme-sm dark:text-gray-400"
+                    >
+                      <span className="text-gray-500">No data available</span>
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  userData.map((item: any, index) => (
+                    <TableRow key={item.id}>
+                      <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        {index + 1}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400" key={item.name}>
+                        {item.name}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        <Badge
+                          size="sm"
+                          color={
+                            item.role === "Admin"
+                              ? "success"
+                              : item.role === "Customer"
+                              ? "warning"
+                              : "error"
+                          }
+                        >
+                          {item.role}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        {item.email}
+                      </TableCell>
+                      <TableCell className="flex items-center px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        <Link href={`/users/edit/${item.id}`} className="flex items-center justify-center">
+                          <span className="w-4 mr-5 cursor-pointer menu-item-icon-warning">
+                            <PencilIcon />
+                          </span>
+                        </Link>
+                          <span className="w-4 cursor-pointer menu-item-icon-error">
+                            <TrashBinIcon />
+                          </span>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
