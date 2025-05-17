@@ -72,7 +72,7 @@ export default function PricelistInput() {
     
         try {
             const res = await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/packages`,
+                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages`,
                 bodyFormData,
                 {
                     headers: {
@@ -122,7 +122,7 @@ export default function PricelistInput() {
             const token = localStorage.getItem('token');
             if (!token) return;
 
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/packages`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages`, {
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${token}`,

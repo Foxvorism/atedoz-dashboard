@@ -27,7 +27,7 @@ export default function Pricelist() {
 
   const getPriceListData = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/packages`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages`, {
         headers: {
           'content-type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
@@ -86,7 +86,7 @@ export default function Pricelist() {
         try {
           // Pastikan id yang dikirimkan adalah valid
           const res = await axios.delete(
-            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/packages/${id}`,
+            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages/${id}`,
             {
               headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,

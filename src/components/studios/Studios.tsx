@@ -22,7 +22,7 @@ export default function Studios() {
 
   const getStudioData = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/studios`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/studios`, {
         headers: {
           'content-type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -79,7 +79,7 @@ export default function Studios() {
         try {
           // Pastikan id yang dikirimkan adalah valid
           const res = await axios.delete(
-            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/studios/${id}`,
+            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/studios/${id}`,
             {
               headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
