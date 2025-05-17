@@ -69,7 +69,7 @@ export default function ArticleInput() {
 
         try {
             const res = await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/articles`,
+                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/articles`,
                 bodyFormData,
                 {
                     headers: {
@@ -93,7 +93,7 @@ export default function ArticleInput() {
 
   // Jika hanya nama file, tambahkan path secara manual
   if (!imageUrl.startsWith("http") && !imageUrl.startsWith("/")) {
-    imageUrl = `${process.env.NEXT_PUBLIC_BACKEND_HOST}/storage/thumbnails/${imageUrl}`;
+    imageUrl = `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/storage/thumbnails/${imageUrl}`;
   } else if (imageUrl.startsWith("/")) {
     imageUrl = `${process.env.NEXT_PUBLIC_BACKEND_HOST}${imageUrl}`;
   }

@@ -24,7 +24,7 @@ const Articles: React.FC = () => {
 
     const fetchArticles = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/articles/`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/articles/`, {
                 headers: {
                     'content-type': 'application/json',
                 }

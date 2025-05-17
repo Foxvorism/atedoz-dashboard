@@ -48,7 +48,7 @@ export default function Transactions() {
 
   const getTransactionData = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/orders`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/orders`, {
         headers: {
           'content-type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
@@ -107,7 +107,7 @@ export default function Transactions() {
         try {
           // Pastikan id yang dikirimkan adalah valid
           const res = await axios.delete(
-            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/orders/${id}`,
+            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/orders/${id}`,
             {
               headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,

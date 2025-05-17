@@ -14,7 +14,7 @@ const Events: React.FC = () => {
     // Function to fetch events from the API
     const fetchEvents = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/events`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/events`, {
                 headers: {
                     'content-type': 'application/json',
                 }
