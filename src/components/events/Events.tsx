@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, ReactNode } from "react";
-import { TableIcon } from "../../icons/index";
+import { TableIcon, PencilIcon, TrashBinIcon } from "../../icons/index";
 import Link from "next/link";
 import axios from "axios";
 
@@ -78,6 +78,16 @@ const Events: React.FC = () => {
                         <div className="p-4">
                             <h2 className="text-xl truncate">{event.nama_event}</h2>
                             <h3 className="text-gray-400 text-xs">{event.updated_at.slice(0,10)}</h3>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2 px-4 pb-4">
+                            <button className="bg-yellow-500 p-1 rounded-md text-black flex justify-center items-center">
+                                <PencilIcon className="mr-1" />
+                                <span>Edit</span>
+                            </button>
+                            <button className="bg-red-500 p-1 rounded-md text-white flex justify-center items-center">
+                                <TrashBinIcon className="mr-1" />
+                                <span>Delete</span>
+                            </button>
                         </div>
                     </div>
                 ))}
