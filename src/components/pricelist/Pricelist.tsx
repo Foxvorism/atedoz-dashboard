@@ -17,7 +17,7 @@ import {
 } from "../../icons/index";
 
 const formatPrice = (price: number) => {
-  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
 
@@ -39,6 +39,8 @@ export default function Pricelist() {
       } else {
         console.warn("⚠️ Format response tidak sesuai harapan:", response.data);
       }
+
+      console.log(response.data)
 
     } catch (error) {
       if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
@@ -174,36 +176,46 @@ export default function Pricelist() {
 
               {/* Table Body */}
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                {pricelist.map((item: any, index) => (
-                  <TableRow key={item.id}>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      {index + 1}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      {item.nama_paket}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      IDR. {formatPrice(item.harga)},00-
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      {item.deskripsi}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      {item.thumbnail}
-                    </TableCell>
-                    <TableCell className="flex items-center px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      <span className="w-4 mr-3 cursor-pointer menu-item-icon-warning">
-                        <Link href={`/pricelist/edit/${item.id}`}>
-                          <PencilIcon />
-                        </Link>
-                      </span>
-                      <span className="w-4 cursor-pointer menu-item-icon-error"
-                        onClick={() => deletePrice(item.id)}>
-                        <TrashBinIcon />
-                      </span>
+                {pricelist.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={6} // Menambahkan colSpan untuk menutupi 6 kolom
+                      className="px-4 py-3 text-center text-theme-sm dark:text-gray-400"
+                    >
+                      <span className="text-gray-500">No data available</span>
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  pricelist.map((item: any, index) => (
+                    <TableRow key={item.id}>
+                      <TableCell className="px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        {index + 1}
+                      </TableCell>
+                      <TableCell className="px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        {item.nama_paket}
+                      </TableCell>
+                      <TableCell className="px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        IDR. {formatPrice(item.harga)}
+                      </TableCell>
+                      <TableCell className="px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        {item.deskripsi}
+                      </TableCell>
+                      <TableCell className="px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        {item.thumbnail}
+                      </TableCell>
+                      <TableCell className="flex items-center px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        <span className="w-4 mr-3 cursor-pointer menu-item-icon-warning">
+                          <Link href={`/pricelist/edit/${item.id}`}>
+                            <PencilIcon />
+                          </Link>
+                        </span>
+                        <span className="w-4 cursor-pointer menu-item-icon-error" onClick={() => deletePrice(item.id)}>
+                          <TrashBinIcon />
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>

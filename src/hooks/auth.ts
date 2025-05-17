@@ -9,7 +9,7 @@ export interface LoginResponse {
 
 export const login = async (email: string, password: string): Promise<LoginResponse> => {
     try {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`, { email, password });
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/login`, { email, password });
         const { access_token, user } = response.data;
 
         console.log('Login response:', response.data); // Debug log

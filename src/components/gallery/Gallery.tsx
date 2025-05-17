@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { useModal } from "@/hooks/useModal";
 import { Modal } from "@/components/ui/modal";
-import { GridIcon } from "../../icons/index";
+import { GridIcon, PencilIcon, TrashBinIcon } from "../../icons/index";
 import Link from "next/link";
 
 const Gallery: React.FC = () => {
@@ -44,14 +44,21 @@ const Gallery: React.FC = () => {
                 {sortedPhotos.map((photo) => (
                     <div
                         key={photo.id}
-                        className="relative w-full bg-gray-100 rounded-lg overflow-hidden hover:scale-[102%]"
+                        className="w-full bg-gray-100 rounded-lg hover:scale-[102%]"
                         onClick={() => handlePhotoClick(photo)} // Handle click event for first modal
                     >
-                        <img
-                            src={photo.url}
-                            alt={photo.alt}
-                            className="aspect-square w-full h-full object-cover cursor-pointer"
-                        />
+                        <div className="relative w-full overflow-hidden rounded-t-lg">
+                            <img
+                                src={photo.url}
+                                alt={photo.alt}
+                                className="aspect-square w-full h-full object-cover cursor-pointer"
+                                />
+                        </div>
+
+                        <button className="w-full bg-red-500 p-1 text-white flex justify-center items-center rounded-b-lg">
+                            <TrashBinIcon className="mr-1" />
+                            <span>Delete</span>
+                        </button>
                     </div>
                 ))}
             </div>
