@@ -170,36 +170,47 @@ export default function Studios() {
 
               {/* Table Body */}
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                {studio.map((studios: any, index) => (
-                  <TableRow key={studios.id}>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {index + 1}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {studios.nama_studio}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {studios.longitude}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {studios.latitude}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {studios.deskripsi_posisi}
-                    </TableCell>
-                    <TableCell className="flex items-center px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      <span className="w-4 mr-3 cursor-pointer menu-item-icon-warning">
-                        <Link href={`/studios/edit/${studios.id}`}>
-                          <PencilIcon />
-                        </Link>
-                      </span>
-                      <span className="w-4 cursor-pointer menu-item-icon-error"
-                      onClick={() => deletePrice(studios.id)}>
-                        <TrashBinIcon />
-                      </span>
+              {studio.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={6}
+                      className="px-4 py-3 text-center text-theme-sm dark:text-gray-400"
+                    >
+                      <span className="text-gray-500">No data available</span>
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : (
+                  studio.map((studios: any, index) => (
+                    <TableRow key={studios.id}>
+                      <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                          {index + 1}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                          {studios.nama_studio}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                          {studios.longitude}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                          {studios.latitude}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                          {studios.deskripsi_posisi}
+                      </TableCell>
+                      <TableCell className="flex items-center px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        <span className="w-4 mr-3 cursor-pointer menu-item-icon-warning">
+                          <Link href={`/studios/edit/${studios.id}`}>
+                            <PencilIcon />
+                          </Link>
+                        </span>
+                        <span className="w-4 cursor-pointer menu-item-icon-error"
+                        onClick={() => deletePrice(studios.id)}>
+                          <TrashBinIcon />
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>
