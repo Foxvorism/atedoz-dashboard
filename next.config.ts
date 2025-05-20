@@ -15,7 +15,12 @@ const nextConfig: NextConfig = {
             ]
         }
     ]
-},
+  },
+
+  images: {
+    domains: ['apiateedoz.test'],
+  },
+
   /* config options here */
   webpack(config) {
     config.module.rules.push({
