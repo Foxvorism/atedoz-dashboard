@@ -194,9 +194,9 @@ export default function Users() {
                         <Badge
                           size="sm"
                           color={
-                            item.role === "Admin"
+                            item.role === "admin"
                               ? "success"
-                              : item.role === "Customer"
+                              : item.role === "customer"
                               ? "warning"
                               : "error"
                           }
