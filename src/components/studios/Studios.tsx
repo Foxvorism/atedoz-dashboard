@@ -56,7 +56,7 @@ export default function Studios() {
     }
   };
 
-  const deletePrice = async (id: number) => {
+  const deleteStudio = async (id: number) => {
     Swal.fire({
       title: 'Are you sure?',
       text: "You won't be able to revert this!",
@@ -204,7 +204,7 @@ export default function Studios() {
                           </Link>
                         </span>
                         <span className="w-4 cursor-pointer menu-item-icon-error"
-                        onClick={() => deletePrice(studios.id)}>
+                        onClick={() => deleteStudio(studios.id)}>
                           <TrashBinIcon />
                         </span>
                       </TableCell>

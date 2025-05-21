@@ -1,38 +1,105 @@
 "use client";
-import React, { useState } from "react";
-import { useModal } from "@/hooks/useModal";
 import { Modal } from "@/components/ui/modal";
-import { GridIcon, PencilIcon, TrashBinIcon } from "../../icons/index";
+import { useModal } from "@/hooks/useModal";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { GridIcon, TrashBinIcon } from "../../icons";
 
-const Gallery: React.FC = () => {
+type Photo = {
+    id: number;
+    foto: string;
+    deskripsi: string;
+};
+
+export default function Gallery() {
     const { isOpen: isModalPhotoOpen, openModal: openModalPhoto, closeModal: closeModalPhoto } = useModal();
-    
-    const [selectedPhoto, setSelectedPhoto] = useState<{ id: number; url: string, alt: string } | null>(null);
+    const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+    const [photos, setPhotos] = useState<Photo[]>([]);
 
-    const photos = [
-        { id: 1, url: "https://images.unsplash.com/photo-1744566917536-792e7f28c4c8?q=80&w=2564&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Photo 1" },
-        { id: 2, url: "https://images.unsplash.com/photo-1736796312243-e1510b8b5c3a?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Photo 2" },
-        { id: 3, url: "https://images.unsplash.com/photo-1744278955687-2a0216448268?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Photo 3" },
-        { id: 4, url: "https://images.unsplash.com/photo-1744762561513-4388d8326a74?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Photo 4" },
-        { id: 5, url: "https://plus.unsplash.com/premium_photo-1669223464660-08f06bffabc0?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Photo 5" },
-    ];
-
-    // Sort photos by id in descending order
-    const sortedPhotos = [...photos].sort((a, b) => b.id - a.id);
-
-    // Function to handle opening the modal with the photo data
-    const handlePhotoClick = (photo: { id: number; url: string; alt: string }) => {
-        setSelectedPhoto(photo);  // Set the selected photo's id and url
-        openModalPhoto();  // Open the modal
+    const handlePhotoClick = (photo: Photo) => {
+        setSelectedPhoto(photo);
+        openModalPhoto();
     };
 
+    const handleDelete = async (id: number) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: "Loading...",
+                    text: "Mohon tunggu sebentar...",
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    },
+                });
+
+                try {
+                    const response = await fetch(
+                        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/galleries/${id}`,
+                        {
+                            method: "DELETE",
+                            headers: {
+                                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                            },
+                        }
+                    );
+
+                    if (!response.ok) {
+                        throw new Error("Failed to delete");
+                    }
+
+                    await getGalleryPhotos(); // refresh data setelah delete
+
+                    Swal.fire("Deleted!", "Your file has been deleted.", "success");
+                } catch (error) {
+                    console.error("❌ Error deleting photo:", error);
+                    Swal.fire("Error!", "Failed to delete the file.", "error");
+                }
+            }
+        });
+    };
+
+
+    const getGalleryPhotos = async () => {
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/galleries`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+            });
+
+            const data = await response.json();
+
+            if (Array.isArray(data)) {
+                setPhotos(data);
+            } else {
+                console.warn("⚠️ Unexpected response format:", data);
+            }
+        } catch (error) {
+            console.error("❌ Failed to fetch gallery photos:", error);
+        }
+    };
+
+    useEffect(() => {
+        getGalleryPhotos();
+    }, []);
+
+    const sortedPhotos = [...photos].sort((a, b) => b.id - a.id);
+
     return (
-        <div className="">
+        <div>
             <Link href="/gallery/input">
-                <button 
-                className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
-                >
+                <button className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]">
                     <div className="mr-1">
                         <GridIcon />
                     </div>
@@ -40,22 +107,28 @@ const Gallery: React.FC = () => {
                 </button>
             </Link>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
                 {sortedPhotos.map((photo) => (
                     <div
                         key={photo.id}
-                        className="w-full bg-gray-100 rounded-lg hover:scale-[102%]"
-                        onClick={() => handlePhotoClick(photo)} // Handle click event for first modal
+                        className="w-full bg-gray-100 rounded-lg hover:scale-[102%] transition"
+                        onClick={() => handlePhotoClick(photo)}
                     >
                         <div className="relative w-full overflow-hidden rounded-t-lg">
                             <img
-                                src={photo.url}
-                                alt={photo.alt}
-                                className="aspect-square w-full h-full object-cover cursor-pointer"
-                                />
+                                src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${photo.foto}`}
+                                alt={photo.deskripsi || `Photo ${photo.id}`}
+                                className="object-cover w-full h-full cursor-pointer aspect-square"
+                            />
                         </div>
 
-                        <button className="w-full bg-red-500 p-1 text-white flex justify-center items-center rounded-b-lg">
+                        <button
+                            className="flex items-center justify-center w-full p-1 text-white bg-red-500 rounded-b-lg"
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                handleDelete(photo.id);
+                            }}
+                        >
                             <TrashBinIcon className="mr-1" />
                             <span>Delete</span>
                         </button>
@@ -63,20 +136,20 @@ const Gallery: React.FC = () => {
                 ))}
             </div>
 
-            {/* First Modal to display selected photo's ID and URL */}
             {isModalPhotoOpen && selectedPhoto && (
                 <Modal isOpen={isModalPhotoOpen} onClose={closeModalPhoto} className="lg:max-w-[45vw] max-w-[80vw]">
                     <div className="w-full">
                         <img
-                            src={selectedPhoto.url}
-                            alt={selectedPhoto.alt}
-                            className="rounded-xl object-cover aspect-square"
+                            src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${selectedPhoto.foto}`}
+                            alt={selectedPhoto.deskripsi}
+                            className="object-cover w-full rounded-xl aspect-square"
                         />
+                        {selectedPhoto.deskripsi && (
+                            <p className="mt-2 text-sm text-center text-gray-700">{selectedPhoto.deskripsi}</p>
+                        )}
                     </div>
                 </Modal>
             )}
         </div>
     );
-};
-
-export default Gallery;
+}

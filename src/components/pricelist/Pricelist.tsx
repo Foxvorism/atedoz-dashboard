@@ -159,12 +159,12 @@ export default function Pricelist() {
                   >
                     Description
                   </TableCell>
-                  <TableCell
+                  {/* <TableCell
                     isHeader
                     className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                   >
                     Thumbnail
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell
                     isHeader
                     className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
@@ -200,9 +200,14 @@ export default function Pricelist() {
                       <TableCell className="px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         {item.deskripsi}
                       </TableCell>
-                      <TableCell className="px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {item.thumbnail}
-                      </TableCell>
+                      {/* <TableCell className="px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        <img
+                          src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${item.thumbnail}`}
+                          alt={item.nama_paket}
+                          className="object-cover w-16 h-16 rounded"
+                        />
+                      </TableCell> */}
+
                       <TableCell className="flex items-center px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         <span className="w-4 mr-3 cursor-pointer menu-item-icon-warning">
                           <Link href={`/pricelist/edit/${item.id}`}>

@@ -10,7 +10,7 @@ import {
 } from "../ui/table";
 
 import {
-  GroupIcon, PencilIcon, TrashBinIcon
+  GroupIcon
 } from "../../icons/index";
 
 import axios from "axios";
@@ -70,6 +70,7 @@ export default function Users() {
     id: number;
     name: string;
     email: string;
+    phone: number;
     role: string;
   }
 
@@ -84,7 +85,7 @@ export default function Users() {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
       });
-  
+
       if (Array.isArray(response.data)) {
         setUserData(response.data);
         console.log("📦 Data paket:", response.data);
@@ -110,7 +111,7 @@ export default function Users() {
       }
     }
   };
-  
+
   useEffect(() => {
     getUserData();
   }, []);
@@ -119,16 +120,16 @@ export default function Users() {
   return (
     <>
       <Link href="/users/input">
-        <button 
+        <button
           className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
-          >
-            <div className="mr-1">
-                <GroupIcon />
-            </div>
-            Add a New User
+        >
+          <div className="mr-1">
+            <GroupIcon />
+          </div>
+          Add a New User
         </button>
       </Link>
-    
+
 
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
         <div className="max-w-full overflow-x-auto">
@@ -165,14 +166,20 @@ export default function Users() {
                     isHeader
                     className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                   >
-                    Action
+                    Phone
                   </TableCell>
+                  {/* <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
+                    Action
+                  </TableCell> */}
                 </TableRow>
               </TableHeader>
 
               {/* Table Body */}
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {userData.length === 0 ? (
+                {userData.length === 0 ? (
                   <TableRow>
                     <TableCell
                       colSpan={5}
@@ -194,11 +201,11 @@ export default function Users() {
                         <Badge
                           size="sm"
                           color={
-                            item.role === "Admin"
+                            item.role === "admin"
                               ? "success"
-                              : item.role === "Customer"
-                              ? "warning"
-                              : "error"
+                              : item.role === "customer"
+                                ? "warning"
+                                : "error"
                           }
                         >
                           {item.role}
@@ -207,7 +214,10 @@ export default function Users() {
                       <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         {item.email}
                       </TableCell>
-                      <TableCell className="flex items-center px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                      <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        {item.phone}
+                      </TableCell>
+                      {/* <TableCell className="flex items-center px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         <Link href={`/users/edit/${item.id}`} className="flex items-center justify-center">
                           <span className="w-4 mr-5 cursor-pointer menu-item-icon-warning">
                             <PencilIcon />
@@ -216,7 +226,7 @@ export default function Users() {
                           <span className="w-4 cursor-pointer menu-item-icon-error">
                             <TrashBinIcon />
                           </span>
-                      </TableCell>
+                      </TableCell> */}
                     </TableRow>
                   ))
                 )}
