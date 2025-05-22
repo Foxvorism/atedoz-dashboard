@@ -22,9 +22,20 @@ export default function PricelistInput() {
     });
 
     // Handle file upload via drag or browse
+    const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
+
     const onDrop = (acceptedFiles: File[]) => {
         if (acceptedFiles.length > 0) {
             const file = acceptedFiles[0];
+
+            if (file.size > MAX_IMAGE_SIZE) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Terlalu Besar',
+                    text: 'Ukuran gambar maksimal 2MB.',
+                });
+                return;
+            }
 
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -49,6 +60,15 @@ export default function PricelistInput() {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
+            if (file.size > MAX_IMAGE_SIZE) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'File Terlalu Besar',
+                    text: 'Ukuran gambar maksimal 2MB.',
+                });
+                return;
+            }
+
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result as string);
@@ -162,7 +182,7 @@ export default function PricelistInput() {
         <form onSubmit={createPricelist}>
             <ComponentCard title="New Pricelist Form" href="/pricelist">
                 <div className="space-y-6">
-                    {/* <div>
+                    <div>
                         <Label>Thumbnail</Label>
                         {imagePreview ? (
                             <div className="flex justify-center mb-4">
@@ -190,11 +210,10 @@ export default function PricelistInput() {
                                 {...getRootProps()}
                             >
                                 <div
-                                    className={`dropzone rounded-xl border-dashed border-gray-300 p-7 lg:p-10 ${
-                                        isDragActive
-                                            ? "border-brand-500 bg-gray-100 dark:bg-gray-800"
-                                            : "border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-900"
-                                    }`}
+                                    className={`dropzone rounded-xl border-dashed border-gray-300 p-7 lg:p-10 ${isDragActive
+                                        ? "border-brand-500 bg-gray-100 dark:bg-gray-800"
+                                        : "border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-900"
+                                        }`}
                                 >
                                     <input {...getInputProps({ onChange: handleFileChange })} />
 
@@ -229,7 +248,7 @@ export default function PricelistInput() {
                                 </div>
                             </div>
                         )}
-                    </div> */}
+                    </div>
 
                     <div>
                         <Label>Service Name</Label>

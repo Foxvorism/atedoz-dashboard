@@ -61,7 +61,6 @@ export default function EventInput() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-
         Swal.fire({
             title: 'Loading...',
             text: 'Mohon tunggu sebentar...',
@@ -96,8 +95,6 @@ export default function EventInput() {
                     },
                 }
             );
-
-            console.log("Event berhasil dibuat:", response.data);
 
             Swal.close();
             Swal.fire({
@@ -137,7 +134,6 @@ export default function EventInput() {
                 <div className="space-y-6">
                     <div>
                         <Label>Select a Photo</Label>
-                        {/* Preview the selected image */}
                         {imagePreview && (
                             <div className="flex justify-center mb-4">
                                 <img src={imagePreview} alt="Preview" className="w-[40vw] aspect-[3/2] object-cover rounded-lg border border-gray-300 bg-transparent mr-3" />
@@ -166,7 +162,6 @@ export default function EventInput() {
                                             : "border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-900"
                                         }`}
                                 >
-                                    {/* Hidden Input */}
                                     <input {...getInputProps()} />
                                     <div className="dz-message flex flex-col items-center m-0!">
                                         {/* Icon Container */}

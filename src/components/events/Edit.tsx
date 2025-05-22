@@ -11,7 +11,6 @@ import Input from '../form/input/InputField';
 
 export default function EventsEdit({ id }: { id: number }) {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    // Track if we're using a new file or keeping existing image
     const [isNewFile, setIsNewFile] = useState(false);
 
     const onDrop = (acceptedFiles: File[]) => {
@@ -161,6 +160,7 @@ export default function EventsEdit({ id }: { id: number }) {
                     icon: "error",
                     title: "Gagal Memperbarui",
                     text: message,
+                    confirmButtonColor: '#1B1B1B',
                     showConfirmButton: true,
                 });
             }

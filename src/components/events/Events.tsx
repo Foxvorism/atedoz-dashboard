@@ -10,6 +10,7 @@ const Events: React.FC = () => {
   const [events, setEvents] = useState<{
     thumbnail: string;
     nama_event: ReactNode;
+    tanggal_event: string;
     updated_at: any; id: number; url: string; alt: string; title: string
   }[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<{ id: number; url: string; alt: string; title: string } | null>(null);
@@ -37,7 +38,7 @@ const Events: React.FC = () => {
       text: "You won't be able to revert this!",
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonColor: '#3085d6',
+      confirmButtonColor: '#1B1B1B',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
@@ -120,10 +121,10 @@ const Events: React.FC = () => {
             />
             <div className="p-4">
               <h2 className="text-xl truncate">{event.nama_event}</h2>
-              <h3 className="text-xs text-gray-400">{event.updated_at.slice(0, 10)}</h3>
+              <h3 className="text-xs text-gray-400">{event.tanggal_event}</h3>
             </div>
             <div className="grid grid-cols-2 gap-2 px-4 pb-4">
-              <button className="flex items-center justify-center p-1 text-black bg-yellow-500 rounded-md">
+              <button className="flex items-center justify-center p-1 text-black bg-yellow-500 rounded-md hover:bg-yellow-400">
                 <Link href={`/events/edit/${event.id}`}>
                   <span className="flex items-center">
                     <PencilIcon className="mr-1" />
@@ -131,7 +132,7 @@ const Events: React.FC = () => {
                   </span>
                 </Link>
               </button>
-              <button className="flex items-center justify-center p-1 text-white bg-red-500 rounded-md"
+              <button className="flex items-center justify-center p-1 text-white bg-red-500 rounded-md hover:bg-red-400"
                 onClick={() => deleteEvents(event.id)}>
                 <TrashBinIcon className="mr-1" />
                 <span>Delete</span>

@@ -112,11 +112,11 @@ export default function Studios() {
   return (
     <>
       <Link href="/studios/input">
-        <button 
+        <button
           className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
-          >
-            <div className="mr-1">
-              <ListIcon />
+        >
+          <div className="mr-1">
+            <ListIcon />
           </div>
           Add a New Studio
         </button>
@@ -124,7 +124,7 @@ export default function Studios() {
 
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
         <div className="max-w-full overflow-x-auto">
-          <div className="min-w-[1102px]">
+          <div className="">
             <Table>
               {/* Table Header */}
               <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
@@ -170,7 +170,7 @@ export default function Studios() {
 
               {/* Table Body */}
               <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-              {studio.length === 0 ? (
+                {studio.length === 0 ? (
                   <TableRow>
                     <TableCell
                       colSpan={6}
@@ -183,28 +183,28 @@ export default function Studios() {
                   studio.map((studios: any, index) => (
                     <TableRow key={studios.id}>
                       <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                          {index + 1}
+                        {index + 1}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                          {studios.nama_studio}
+                        {studios.nama_studio}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                          {studios.longitude}
+                        {studios.longitude}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                          {studios.latitude}
+                        {studios.latitude}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                          {studios.deskripsi_posisi}
+                        {studios.deskripsi_posisi}
                       </TableCell>
                       <TableCell className="flex items-center px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        <span className="w-4 mr-3 cursor-pointer menu-item-icon-warning">
+                        <span className="inline-flex items-center justify-center w-8 h-8 mr-3 bg-yellow-400 cursor-pointer rounded-xl hover:bg-yellow-300">
                           <Link href={`/studios/edit/${studios.id}`}>
                             <PencilIcon />
                           </Link>
                         </span>
-                        <span className="w-4 cursor-pointer menu-item-icon-error"
-                        onClick={() => deleteStudio(studios.id)}>
+                        <span className="inline-flex items-center justify-center w-8 h-8 mr-3 text-white bg-red-500 cursor-pointer rounded-xl hover:bg-red-400"
+                          onClick={() => deleteStudio(studios.id)}>
                           <TrashBinIcon />
                         </span>
                       </TableCell>

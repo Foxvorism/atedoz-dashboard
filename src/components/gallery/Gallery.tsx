@@ -123,7 +123,7 @@ export default function Gallery() {
                         </div>
 
                         <button
-                            className="flex items-center justify-center w-full p-1 text-white bg-red-500 rounded-b-lg"
+                            className="flex items-center justify-center w-full p-1 text-white bg-red-500 rounded-b-lg hover:bg-red-600"
                             onClick={(e) => {
                                 e.stopPropagation()
                                 handleDelete(photo.id);

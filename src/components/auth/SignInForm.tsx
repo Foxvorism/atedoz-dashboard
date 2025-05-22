@@ -26,7 +26,7 @@ export default function SignInForm() {
     const result = await login(email, password);
 
     if (result.success) {
-      router.push("/users"); // arahkan ke halaman dashboard
+      router.push("/"); // arahkan ke halaman dashboard
     } else {
       if (typeof result.message === "object" && (result.message)) {
         setErrors(result.message);
