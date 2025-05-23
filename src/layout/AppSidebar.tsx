@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSidebar } from "../context/SidebarContext";
 import {
-  CalenderIcon,
   ChevronDownIcon,
   DollarLineIcon,
   GridIcon,
@@ -14,7 +13,8 @@ import {
   ListIcon,
   PageIcon,
   TableIcon,
-  TaskIcon
+  TaskIcon,
+  PieChartIcon
 } from "../icons/index";
 
 type NavItem = {
@@ -26,22 +26,27 @@ type NavItem = {
 
 const mainItems: NavItem[] = [
   {
+    icon: <GridIcon />,
+    name: "Dashboard",
+    path: "/",
+  },
+  {
     icon: <GroupIcon />,
     name: "Users",
     path: "/users",
   },
-  {
-    icon: <CalenderIcon />,
-    name: "Schedule",
-    path: "/schedule",
-  },
+  // {
+  //   icon: <CalenderIcon />,
+  //   name: "Schedule",
+  //   path: "/schedule",
+  // },
   {
     icon: <DollarLineIcon />,
     name: "Pricelist",
     path: "/pricelist",
   },
   {
-    icon: <TaskIcon />,
+    icon: <PieChartIcon />,
     name: "Transaction",
     path: "/transaction",
   },
@@ -93,7 +98,7 @@ const othersItems: NavItem[] = [
     path: "/articles",
   },
   {
-    icon: <GridIcon />,
+    icon: <TaskIcon />,
     name: "Gallery",
     path: "/gallery",
   },
