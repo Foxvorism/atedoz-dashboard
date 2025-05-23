@@ -18,7 +18,8 @@ const nextConfig: NextConfig = {
   },
 
   images: {
-    domains: ['apiateedoz.test'],
+    // domains: ['apiateedoz.test'],
+    domains: ['127.0.0.1', 'localhost'],
   },
 
   /* config options here */
