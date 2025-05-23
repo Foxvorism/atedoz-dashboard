@@ -1,9 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { PageIcon, PencilIcon, TrashBinIcon } from "../../icons/index";
-import Link from "next/link";
 import axios from "axios";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { PageIcon, PencilIcon, TrashBinIcon } from "../../icons/index";
 
 interface Article {
     id: number;
@@ -71,7 +71,46 @@ const Articles: React.FC = () => {
         setSelectedArticle(article);  // Set the selected article's id and url
         // openModalArticle();  // Open the modal
     };
+    const handleDelete = async (id: number) => {
+    const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#d33",
+        cancelButtonColor: "#3085d6",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+    });
 
+    if (result.isConfirmed) {
+        try {
+            await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/articles/${id}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            // Update UI: filter out artikel yang dihapus
+            setArticles(prev => prev.filter(article => article.id !== id));
+
+            Swal.fire({
+                icon: "success",
+                title: "Deleted!",
+                text: "Article data has been deleted",
+                timer: 1500,
+                showConfirmButton: false,
+            });
+        } catch (error) {
+            console.error("Error while deleting the article:", error);
+            Swal.fire({
+                icon: "error",
+                title: "Failed to Delete",
+                text: "Terjadi kesalahan saat menghapus data.",
+            });
+        }
+    }
+};
     return(
         <div>
             <Link href="/articles/input">
@@ -102,11 +141,22 @@ const Articles: React.FC = () => {
                             <h3 className="text-gray-400 text-xs">{article.updated_at.slice(0,10)}</h3>
                         </div>
                         <div className="grid grid-cols-2 gap-2 px-4 pb-4">
-                            <button className="bg-yellow-500 p-1 rounded-md text-black flex justify-center items-center">
-                                <PencilIcon className="mr-1" />
-                                <span>Edit</span>
-                            </button>
-                            <button className="bg-red-500 p-1 rounded-md text-white flex justify-center items-center">
+                            <Link href={`/articles/edit/${article.id}`} className="w-full">
+                                <button
+                                    className="bg-yellow-500 p-1 rounded-md text-black flex justify-center items-center w-full"
+                                    onClick={(e) => e.stopPropagation()} // biar gak trigger modal
+                                >
+                                    <PencilIcon className="mr-1" />
+                                    <span>Edit</span>
+                                </button>
+                                </Link>
+                            <button
+                                className="bg-red-500 p-1 rounded-md text-white flex justify-center items-center"
+                                onClick={(e) => {
+                                    e.stopPropagation(); // biar gak ke-trigger modal/article click
+                                    handleDelete(article.id);
+                                }}
+                            >
                                 <TrashBinIcon className="mr-1" />
                                 <span>Delete</span>
                             </button>

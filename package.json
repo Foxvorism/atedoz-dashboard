@@ -35,7 +35,7 @@
     "react-dropzone": "^14.3.5",
     "react-select": "^5.10.1",
     "sweetalert": "^2.1.2",
-    "sweetalert2": "^11.21.0",
+    "sweetalert2": "^11.21.2",
     "swiper": "^11.2.0",
     "tailwind-merge": "^2.6.0"
   },
