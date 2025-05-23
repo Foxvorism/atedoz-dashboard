@@ -19,8 +19,7 @@ export default function EventInput() {
         deskripsi_event: "",
         tanggal_event: "",
         thumbnail: null as File | null,
-        longitude: "",
-        latitude: ""
+        lokasi: "",
     });
 
     const onDrop = (acceptedFiles: File[]) => {
@@ -74,11 +73,8 @@ export default function EventInput() {
         formData.append("nama_event", eventDetails.nama_event);
         formData.append("tanggal_event", eventDetails.tanggal_event);
         formData.append("deskripsi_event", eventDetails.deskripsi_event || "");
-        if (eventDetails.longitude) {
-            formData.append("longitude", eventDetails.longitude.toString());
-        }
-        if (eventDetails.latitude) {
-            formData.append("latitude", eventDetails.latitude.toString());
+        if (eventDetails.lokasi) {
+            formData.append("lokasi", eventDetails.lokasi);
         }
 
         if (eventDetails.thumbnail instanceof File) {
@@ -111,8 +107,7 @@ export default function EventInput() {
                 deskripsi_event: "",
                 tanggal_event: "",
                 thumbnail: null,
-                longitude: "",
-                latitude: ""
+                lokasi: "",
             });
             setImagePreview(null);
 
@@ -228,25 +223,14 @@ export default function EventInput() {
                             placeholder="Masukan deskripsi acara"
                         />
 
-                        <div className="space-y-4">
-                            <Label>Longitude</Label>
+                        <div>
+                            <Label>Lokasi</Label>
                             <Input
                                 type="text"
-                                name="longitude"
-                                value={eventDetails.longitude}
+                                name="lokasi"
+                                value={eventDetails.lokasi}
                                 onChange={handleInputChange}
-                                placeholder="Masukan longitude (opsional)"
-                            />
-                        </div>
-
-                        <div className="space-y-4">
-                            <Label>Latitude</Label>
-                            <Input
-                                type="text"
-                                name="latitude"
-                                value={eventDetails.latitude}
-                                onChange={handleInputChange}
-                                placeholder="Masukan latitude (opsional)"
+                                placeholder="Masukan lokasi acara"
                             />
                         </div>
 

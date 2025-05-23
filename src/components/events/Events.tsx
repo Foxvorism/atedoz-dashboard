@@ -122,24 +122,26 @@ const Events: React.FC = () => {
             key={event.id}
             className="relative w-full bg-gray-100 rounded-lg overflow-hidden hover:scale-[102%]"
           >
+            <Link href={`/events/detail/${event.id}`}>
             <img
               src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${event.thumbnail}`}
               alt={event.alt}
               className="object-cover w-full cursor-pointer aspect-video"
             />
+            </Link>
             <div className="p-4">
               <h2 className="text-xl truncate">{event.nama_event}</h2>
               <h3 className="text-xs text-gray-400">{event.tanggal_event}</h3>
             </div>
             <div className="grid grid-cols-2 gap-2 px-4 pb-4">
-              <button className="flex items-center justify-center p-1 text-black bg-yellow-500 rounded-md hover:bg-yellow-400">
-                <Link href={`/events/edit/${event.id}`}>
+              <Link href={`/events/edit/${event.id}`} className="flex items-center justify-center p-1 text-black bg-yellow-500 rounded-md hover:bg-yellow-400">
+                <button >
                   <span className="flex items-center">
                     <PencilIcon className="mr-1" />
                     Edit
                   </span>
-                </Link>
-              </button>
+                </button>
+              </Link>
               <button className="flex items-center justify-center p-1 text-white bg-red-500 rounded-md hover:bg-red-400"
                 onClick={() => deleteEvents(event.id)}>
                 <TrashBinIcon className="mr-1" />

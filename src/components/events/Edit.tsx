@@ -42,8 +42,7 @@ export default function EventsEdit({ id }: { id: number }) {
         deskripsi_event: "",
         tanggal_event: null as Date | null,
         thumbnail: null as File | string | null,
-        longitude: "",
-        latitude: ""
+        lokasi: ""
     });
 
     const fetchEventsById = async () => {
@@ -76,8 +75,7 @@ export default function EventsEdit({ id }: { id: number }) {
                 deskripsi_event: data.deskripsi_event ?? "",
                 tanggal_event: data.tanggal_event ? new Date(data.tanggal_event) : null,
                 thumbnail: data.thumbnail ?? null,
-                longitude: data.longitude?.toString() ?? "",
-                latitude: data.latitude?.toString() ?? "",
+                lokasi: data.lokasi ?? "",
             });
 
             if (data.thumbnail) {
@@ -117,11 +115,8 @@ export default function EventsEdit({ id }: { id: number }) {
             "tanggal_event",
             event.tanggal_event ? event.tanggal_event.toISOString().split("T")[0] : ""
         );
-        if (event.longitude) {
-            formData.append("longitude", event.longitude.toString());
-        }
-        if (event.latitude) {
-            formData.append("latitude", event.latitude.toString());
+        if (event.lokasi) {
+            formData.append("lokasi", event.lokasi);
         }
 
         // Handle thumbnail properly based on what type it is
@@ -281,25 +276,13 @@ export default function EventsEdit({ id }: { id: number }) {
                         </div>
                     </div>
                     <div>
-                        <Label htmlFor="tm">Longitude</Label>
-                        <div className="relative">
-                            <Input
-                                type="text"
-                                placeholder="Masukan koordinat garis bujur"
-                                name="longitude"
-                                value={event.longitude}
-                                onChange={(e) => setEvent({ ...event, longitude: e.target.value })}
-                            />
-                        </div>
-                    </div>
-                    <div className="space-y-4">
-                        <Label>Latitude</Label>
+                        <Label>Lokasi</Label>
                         <Input
                             type="text"
-                            name="latitude"
-                            value={event.latitude}
-                            onChange={(e) => setEvent({ ...event, latitude: e.target.value })}
-                            placeholder="Masukan latitude (opsional)"
+                            name="lokasi"
+                            value={event.lokasi}
+                            onChange={(e) => setEvent({ ...event, lokasi: e.target.value })}
+                            placeholder="Masukan lokasi event"
                         />
                     </div>
                     <div>
