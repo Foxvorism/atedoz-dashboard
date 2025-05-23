@@ -51,7 +51,17 @@ export default function Transactions() {
     start_time: "",
     end_time: "",
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTransactions = transactions.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(transactions.length / itemsPerPage);
   const [editingTransaction, setEditingTransaction] = useState<Transactions | null>(null);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const start_time = [
     { id: 1, value: "08:00", label: "08.00" },
@@ -328,6 +338,12 @@ export default function Transactions() {
                     isHeader
                     className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                   >
+                    Price
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
                     Studio
                   </TableCell>
                   <TableCell
@@ -350,17 +366,17 @@ export default function Transactions() {
               {transactions.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={7}
+                    colSpan={8}
                     className="px-4 py-3 text-center text-theme-sm dark:text-gray-400"
                   >
                     <span className="text-gray-500">No data available</span>
                   </TableCell>
                 </TableRow>
               ) : (
-                transactions.map((transaction, index) => (
+                currentTransactions.map((transaction, index) => (
                   <TableRow key={index + 1}>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      {index + 1}
+                        {indexOfFirstItem + index + 1}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                       {transaction.user.name}
@@ -370,6 +386,9 @@ export default function Transactions() {
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                       {transaction.order_date} | {transaction.start_time} - {transaction.end_time}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                      {"Rp. " + Number(transaction.package.harga).toLocaleString("id-ID")}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                       {transaction.photo_studio.nama_studio}
@@ -413,6 +432,37 @@ export default function Transactions() {
             </Table>
           </div>
         </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 py-4">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+            >
+              Prev
+            </button>
+            {[...Array(totalPages)].map((_, i) => (
+              <button
+                key={i}
+                onClick={() => handlePageChange(i + 1)}
+                className={`px-3 py-1 rounded ${
+                  currentPage === i + 1
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
