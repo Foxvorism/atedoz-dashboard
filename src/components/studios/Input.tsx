@@ -16,8 +16,7 @@ export default function StudioInput() {
     const [studio, setStudio] = useState({
         id: 0,
         nama_studio: "",
-        longitude: "",
-        latitude: "",
+        alamat: "",
         deskripsi_posisi: ""
     });
 
@@ -34,8 +33,7 @@ export default function StudioInput() {
 
         const bodyFormData = new FormData();
         bodyFormData.append('nama_studio', studio.nama_studio);
-        bodyFormData.append('longitude', String(parseFloat(studio.longitude)));
-        bodyFormData.append('latitude', String(parseFloat(studio.latitude)));
+        bodyFormData.append('alamat', studio.alamat);
         bodyFormData.append('deskripsi_posisi', studio.deskripsi_posisi);
 
         try {
@@ -58,8 +56,7 @@ export default function StudioInput() {
             setStudio({
                 id: 0,
                 nama_studio: "",
-                longitude: "",
-                latitude: "",
+                alamat: "",
                 deskripsi_posisi: ""
             });
 
@@ -142,26 +139,13 @@ export default function StudioInput() {
                         </div>
                     </div>
                     <div>
-                        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-                            <div>
-                                <Label>Latitude</Label>
-                                <Input
-                                    type="text"
-                                    placeholder="Masukan koordinat garis lintang"
-                                    value={studio.latitude}
-                                    onChange={(e) => setStudio({ ...studio, latitude: e.target.value })}
-                                />
-                            </div>
-                            <div>
-                                <Label>Longitude</Label>
-                                <Input
-                                    type="text"
-                                    placeholder="Masukan koordinat garis bujur"
-                                    value={studio.longitude}
-                                    onChange={(e) => setStudio({ ...studio, longitude: e.target.value })}
-                                />
-                            </div>
-                        </div>
+                        <Label>Alamat</Label>
+                        <Input
+                            type="text"
+                            placeholder="Masukan alamat studio"
+                            value={studio.alamat}
+                            onChange={(e) => setStudio({ ...studio, alamat: e.target.value })}
+                        />
                     </div>
                     <div>
                         <Label>Event Description</Label>

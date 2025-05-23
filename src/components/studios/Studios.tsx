@@ -145,13 +145,7 @@ export default function Studios() {
                     isHeader
                     className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                   >
-                    Latitude
-                  </TableCell>
-                  <TableCell
-                    isHeader
-                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                  >
-                    Longitude
+                    Alamat
                   </TableCell>
                   <TableCell
                     isHeader
@@ -189,10 +183,7 @@ export default function Studios() {
                         {studios.nama_studio}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {studios.longitude}
-                      </TableCell>
-                      <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {studios.latitude}
+                        {studios.alamat ? studios.alamat : '-'}
                       </TableCell>
                       <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         {studios.deskripsi_posisi}
