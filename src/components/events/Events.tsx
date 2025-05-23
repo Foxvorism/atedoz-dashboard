@@ -81,18 +81,27 @@ const Events: React.FC = () => {
   };
 
 
-  useEffect(() => {
-    fetchEvents();
-  }, []);
+    useEffect(() => {
+        fetchEvents();
+    }, []);
 
-  // Sort events by id in descending order
-  const sortedEvents = [...events].sort((a, b) => b.id - a.id);
+    function formatTanggalIndo(dateString: string): string {
+      if (!dateString) return "-";
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return "-";
 
-  // Function to handle opening the modal with the event data
-  const handleEventClick = (event: { id: number; url: string; alt: string, title: string }) => {
-    setSelectedEvent(event);  // Set the selected event's id and url
-    // openModalEvent();  // Open the modal
-  };
+      return new Intl.DateTimeFormat("id-ID", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+      }).format(date);
+    }
+
+    const sortedEvents = [...events].sort((a, b) => {
+        const dateA = new Date(a.tanggal_event).getTime();
+        const dateB = new Date(b.tanggal_event).getTime();
+        return dateA - dateB;
+    });
 
   return (
     <div className="">
@@ -107,12 +116,11 @@ const Events: React.FC = () => {
         </button>
       </Link>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {sortedEvents.map((event) => (
           <div
             key={event.id}
             className="relative w-full bg-gray-100 rounded-lg overflow-hidden hover:scale-[102%]"
-            onClick={() => handleEventClick(event)} // Handle click event for first modal
           >
             <img
               src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${event.thumbnail}`}
@@ -142,7 +150,7 @@ const Events: React.FC = () => {
         ))}
       </div>
     </div>
-  );
+    );
 };
 
 export default Events;
