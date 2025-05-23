@@ -69,7 +69,7 @@ export default function StudioInput() {
             Swal.fire({
                 icon: 'success',
                 title: 'Berhasil!',
-                text: 'Paket harga berhasil ditambahkan.',
+                text: 'Studio berhasil ditambahkan.',
                 timer: 2000,
                 showConfirmButton: false
             });

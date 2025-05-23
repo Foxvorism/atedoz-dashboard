@@ -1,99 +1,148 @@
 "use client";
-import React, { useState, useEffect, ReactNode } from "react";
-import { TableIcon, PencilIcon, TrashBinIcon } from "../../icons/index";
-import Link from "next/link";
 import axios from "axios";
+import Link from "next/link";
+import React, { ReactNode, useEffect, useState } from "react";
+import Swal from "sweetalert2";
+import { PencilIcon, TableIcon, TrashBinIcon } from "../../icons/index";
+
 
 const Events: React.FC = () => {
-    const [events, setEvents] = useState<{
-        thumbnail: string;
-        nama_event: ReactNode;
-        updated_at: any; id: number; url: string; alt: string; title: string 
-}[]>([]);
-    const [selectedEvent, setSelectedEvent] = useState<{ id: number; url: string; alt: string; title: string } | null>(null);
-    // Function to fetch events from the API
-    const fetchEvents = async () => {
-        try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/events`, {
-                headers: {
-                    'content-type': 'application/json',
-                }
-            });
-            if (Array.isArray(response.data)) {
-                setEvents(response.data);
-            } else {
-                console.warn("⚠️ Format response tidak sesuai harapan:", response.data);
-            }
-        } catch (error) {
-            console.error("❌ Gagal mengambil data events:", error);
+  const [events, setEvents] = useState<{
+    thumbnail: string;
+    nama_event: ReactNode;
+    tanggal_event: string;
+    updated_at: any; id: number; url: string; alt: string; title: string
+  }[]>([]);
+  const [selectedEvent, setSelectedEvent] = useState<{ id: number; url: string; alt: string; title: string } | null>(null);
+  // Function to fetch events from the API
+  const fetchEvents = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/events`, {
+        headers: {
+          'content-type': 'application/json',
         }
-    };
+      });
+      if (Array.isArray(response.data)) {
+        setEvents(response.data);
+      } else {
+        console.warn("⚠️ Format response tidak sesuai harapan:", response.data);
+      }
+    } catch (error) {
+      console.error("❌ Gagal mengambil data events:", error);
+    }
+  };
 
-    useEffect(() => {
-        fetchEvents();
-    }, []);
+  const deleteEvents = async (id: number) => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#1B1B1B',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Loading...',
+          text: 'Mohon tunggu sebentar...',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
 
- //   const events = [
- //       { id: 1, url: "https://images.unsplash.com/photo-1744566917536-792e7f28c4c8?q=80&w=2564&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Photo 1", title: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi similique error excepturi quo natus! Modi sit voluptas impedit veniam rerum, et reprehenderit doloribus harum enim adipisci, ullam, aperiam eligendi facilis." },
- //       { id: 2, url: "https://images.unsplash.com/photo-1736796312243-e1510b8b5c3a?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Photo 2", title: "title 2" },
-  //      { id: 3, url: "https://images.unsplash.com/photo-1744278955687-2a0216448268?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Photo 3", title: "title 3" },
- //       { id: 4, url: "https://images.unsplash.com/photo-1744762561513-4388d8326a74?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Photo 4", title: "title 4" },
-//        { id: 5, url: "https://plus.unsplash.com/premium_photo-1669223464660-08f06bffabc0?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", alt: "Photo 5", title: "title 5" },
-  //  ];
+        try {
+          // Pastikan id yang dikirimkan adalah valid
+          const res = await axios.delete(
+            `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/events/${id}`,
+            {
+              headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              }
+            }
+          );
+          await fetchEvents();  // Refresh data setelah dihapus
+          Swal.fire(
+            'Deleted!',
+            'Your event data has been deleted.',
+            'success'
+          );
+        } catch (error) {
+          console.error('Error while deleting the price:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed to Delete',
+            text: 'Terjadi kesalahan saat menghapus data.',
+          });
+        }
+      }
+    });
+  };
 
-    // Sort events by id in descending order
-    const sortedEvents = [...events].sort((a, b) => b.id - a.id);
 
-    // Function to handle opening the modal with the event data
-    const handleEventClick = (event: { id: number; url: string; alt: string, title: string }) => {
-        setSelectedEvent(event);  // Set the selected event's id and url
-        // openModalEvent();  // Open the modal
-    };
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
-    return(
-        <div className="">
-            <Link href="/events/input">
-                <button 
-                    className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
-                >
-                    <div className="mr-1">
-                        <TableIcon />
-                    </div>
-                    Create a new Event
-                </button>
-            </Link>
+  // Sort events by id in descending order
+  const sortedEvents = [...events].sort((a, b) => b.id - a.id);
 
-            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {sortedEvents.map((event) => (
-                    <div
-                        key={event.id}
-                        className="relative w-full bg-gray-100 rounded-lg overflow-hidden hover:scale-[102%]"
-                        onClick={() => handleEventClick(event)} // Handle click event for first modal
-                    >
-                        <img
-                            src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${event.thumbnail}`}
-                            alt={event.alt}
-                            className="aspect-video w-full object-cover cursor-pointer"
-                        />
-                        <div className="p-4">
-                            <h2 className="text-xl truncate">{event.nama_event}</h2>
-                            <h3 className="text-gray-400 text-xs">{event.updated_at.slice(0,10)}</h3>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 px-4 pb-4">
-                            <button className="bg-yellow-500 p-1 rounded-md text-black flex justify-center items-center">
-                                <PencilIcon className="mr-1" />
-                                <span>Edit</span>
-                            </button>
-                            <button className="bg-red-500 p-1 rounded-md text-white flex justify-center items-center">
-                                <TrashBinIcon className="mr-1" />
-                                <span>Delete</span>
-                            </button>
-                        </div>
-                    </div>
-                ))}
+  // Function to handle opening the modal with the event data
+  const handleEventClick = (event: { id: number; url: string; alt: string, title: string }) => {
+    setSelectedEvent(event);  // Set the selected event's id and url
+    // openModalEvent();  // Open the modal
+  };
+
+  return (
+    <div className="">
+      <Link href="/events/input">
+        <button
+          className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
+        >
+          <div className="mr-1">
+            <TableIcon />
+          </div>
+          Create a new Event
+        </button>
+      </Link>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {sortedEvents.map((event) => (
+          <div
+            key={event.id}
+            className="relative w-full bg-gray-100 rounded-lg overflow-hidden hover:scale-[102%]"
+            onClick={() => handleEventClick(event)} // Handle click event for first modal
+          >
+            <img
+              src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${event.thumbnail}`}
+              alt={event.alt}
+              className="object-cover w-full cursor-pointer aspect-video"
+            />
+            <div className="p-4">
+              <h2 className="text-xl truncate">{event.nama_event}</h2>
+              <h3 className="text-xs text-gray-400">{event.tanggal_event}</h3>
             </div>
-        </div>
-    );
+            <div className="grid grid-cols-2 gap-2 px-4 pb-4">
+              <button className="flex items-center justify-center p-1 text-black bg-yellow-500 rounded-md hover:bg-yellow-400">
+                <Link href={`/events/edit/${event.id}`}>
+                  <span className="flex items-center">
+                    <PencilIcon className="mr-1" />
+                    Edit
+                  </span>
+                </Link>
+              </button>
+              <button className="flex items-center justify-center p-1 text-white bg-red-500 rounded-md hover:bg-red-400"
+                onClick={() => deleteEvents(event.id)}>
+                <TrashBinIcon className="mr-1" />
+                <span>Delete</span>
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default Events;

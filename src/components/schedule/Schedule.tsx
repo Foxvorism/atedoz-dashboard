@@ -1,22 +1,18 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
-import Link from "next/link";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import { Modal } from "@/components/ui/modal";
+import { useModal } from "@/hooks/useModal";
 import {
-  EventInput,
   DateSelectArg,
   EventClickArg,
   EventContentArg,
+  EventInput,
 } from "@fullcalendar/core";
-import { useModal } from "@/hooks/useModal";
-import { Modal } from "@/components/ui/modal";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import interactionPlugin from "@fullcalendar/interaction";
+import FullCalendar from "@fullcalendar/react";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import React, { useEffect, useRef, useState } from "react";
 
-import {
-  CalenderIcon
-} from "../../icons/index";
 
 interface CalendarEvent extends EventInput {
   extendedProps: {
@@ -127,7 +123,7 @@ const Schedule: React.FC = () => {
 
   return (
     <>
-      <Link href="/schedule/input">
+      {/* <Link href="/schedule/input">
         <button 
           className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
           >
@@ -136,7 +132,7 @@ const Schedule: React.FC = () => {
             </div>
             Add a New Schedule
         </button>
-      </Link>
+      </Link> */}
     
       <div className="rounded-2xl border  border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
         <div className="custom-calendar">

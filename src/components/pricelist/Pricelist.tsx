@@ -130,7 +130,7 @@ export default function Pricelist() {
 
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
         <div className="max-w-full overflow-x-auto">
-          <div className="min-w-[1102px]">
+          <div className="">
             <Table>
               {/* Table Header */}
               <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
@@ -200,16 +200,22 @@ export default function Pricelist() {
                       <TableCell className="px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         {item.deskripsi}
                       </TableCell>
-                      <TableCell className="px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        {item.thumbnail}
+                      <TableCell className="py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        <img
+                          src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${item.thumbnail}`}
+                          alt={item.nama_paket}
+                          className="object-cover w-32 h-32 rounded"
+                        />
                       </TableCell>
-                      <TableCell className="flex items-center px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                        <span className="w-4 mr-3 cursor-pointer menu-item-icon-warning">
+
+                      <TableCell className="flex items-center px-5 py-3 mr-4 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                        <span className="inline-flex items-center justify-center w-8 h-8 mr-3 bg-yellow-400 cursor-pointer rounded-xl hover:bg-yellow-300">
                           <Link href={`/pricelist/edit/${item.id}`}>
                             <PencilIcon />
                           </Link>
                         </span>
-                        <span className="w-4 cursor-pointer menu-item-icon-error" onClick={() => deletePrice(item.id)}>
+                        <span className="inline-flex items-center justify-center w-8 h-8 mr-3 text-white bg-red-500 cursor-pointer rounded-xl hover:bg-red-400" 
+                        onClick={() => deletePrice(item.id)}>
                           <TrashBinIcon />
                         </span>
                       </TableCell>
