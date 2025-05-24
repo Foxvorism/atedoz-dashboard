@@ -287,15 +287,24 @@ const Schedule: React.FC = () => {
 
 const renderEventContent = (eventInfo: EventContentArg) => {
   const colorClass = `fc-bg-${eventInfo.event.extendedProps.calendar.toLowerCase()}`;
-  return (
-    <div
-      className={`event-fc-color flex fc-event-main ${colorClass} p-1 rounded-sm`}
-    >
-      <div className="fc-daygrid-event-dot"></div>
-      <div className="fc-event-time">{eventInfo.timeText}</div>
-      <div className="fc-event-title">{eventInfo.event.title}</div>
-    </div>
-  );
-};
+    return (
+      <div
+        className={`flex flex-col items-start gap-2 px-2 py-1 rounded-md shadow-sm ${colorClass}`}
+        style={{
+          background: "#f3f4f6", // warna abu-abu muda, bisa diganti sesuai tema
+          borderLeft: "4px solid #6366f1", // warna bisa diganti sesuai kategori
+          alignItems: "center",
+          minWidth: 0,
+        }}
+      >
+        <span className="block text-xs font-semibold text-red-700 truncate" style={{ maxWidth: 90 }}>
+          {eventInfo.timeText}
+        </span>
+        <span className="block text-xs text-gray-800 truncate" style={{ maxWidth: 120 }}>
+          {eventInfo.event.title}
+        </span>
+      </div>
+    );
+  };
 
 export default Schedule;

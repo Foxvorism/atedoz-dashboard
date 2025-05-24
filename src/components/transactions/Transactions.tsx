@@ -45,6 +45,98 @@ interface Transactions {
 
 export default function Transactions() {
   const [transactions, setTransactionsData] = useState<Transactions[]>([]);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editForm, setEditForm] = useState({
+    order_date: "",
+    start_time: "",
+    end_time: "",
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTransactions = transactions.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(transactions.length / itemsPerPage);
+  const [editingTransaction, setEditingTransaction] = useState<Transactions | null>(null);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const start_time = [
+    { id: 1, value: "08:00", label: "08.00" },
+    { id: 2, value: "09:00", label: "09.00" },
+    { id: 3, value: "10:00", label: "10.00" },
+    { id: 4, value: "11:00", label: "11.00" },
+    { id: 5, value: "12:00", label: "12.00" },
+    { id: 6, value: "13:00", label: "13.00" },
+    { id: 7, value: "14:00", label: "14.00" },
+    { id: 8, value: "15:00", label: "15.00" },
+    { id: 9, value: "16:00", label: "16.00" },
+    { id: 10, value: "17:00", label: "17.00" },
+  ];
+
+  const end_time = [
+    { id: 1, value: "08:50", label: "08.50" },
+    { id: 2, value: "09:50", label: "09.50" },
+    { id: 3, value: "10:50", label: "10.50" },
+    { id: 4, value: "11:50", label: "11.50" },
+    { id: 5, value: "12:50", label: "12.50" },
+    { id: 6, value: "13:50", label: "13.50" },
+    { id: 7, value: "14:50", label: "14.50" },
+    { id: 8, value: "15:50", label: "15.50" },
+    { id: 9, value: "16:50", label: "16.50" },
+    { id: 10, value: "17:50", label: "17.50" },
+  ];
+
+  const padTime = (time: string) => {
+    // Pastikan format selalu 2 digit jam:2 digit menit, misal 08:00
+    if (!time) return "";
+    const [h, m] = time.split(":");
+    return `${h.padStart(2, "0")}:${m.padStart(2, "0")}`;
+  };
+
+  const handleEditClick = (transaction: Transactions) => {
+    setEditingTransaction(transaction);
+    setEditForm({
+      order_date: transaction.order_date,
+      start_time: padTime(transaction.start_time),
+      end_time: padTime(transaction.end_time),
+    });
+    setShowEditModal(true);
+  };
+
+  const handleEditFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    setEditForm({
+      ...editForm,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingTransaction) return;
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/orders/${editingTransaction.id}`,
+        {
+          order_date: editForm.order_date,
+          start_time: editForm.start_time,
+          end_time: editForm.end_time,
+        },
+        {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          }
+        }
+      );
+      setShowEditModal(false);
+      await getTransactionData();
+      Swal.fire("Berhasil!", "Transaksi berhasil diupdate.", "success");
+    } catch (error) {
+      Swal.fire("Gagal!", error.response.data.error, "error");
+    }
+  };
 
   const getTransactionData = async () => {
     try {
@@ -138,6 +230,79 @@ export default function Transactions() {
   
   return (
     <>
+      {showEditModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-lg p-8 min-w-[320px] max-w-[90vw]">
+            <h3 className="text-xl font-bold mb-4">Edit Jadwal Transaksi</h3>
+            <form onSubmit={handleEditSubmit}>
+              <div className="mb-4">
+                <label className="block mb-1 font-semibold">Tanggal Order</label>
+                <input
+                  type="date"
+                  name="order_date"
+                  value={editForm.order_date}
+                  onChange={handleEditFormChange}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block mb-1 font-semibold">Waktu Mulai</label>
+                <select
+                  name="start_time"
+                  value={editForm.start_time}
+                  onChange={handleEditFormChange}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                >
+                  <option value="" disabled>
+                    Pilih waktu mulai
+                  </option>
+                  {start_time.map((start) => (
+                    <option key={start.id} value={start.value}>
+                      {start.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block mb-1 font-semibold">Waktu Selesai</label>
+                <select
+                  name="end_time"
+                  value={editForm.end_time}
+                  onChange={handleEditFormChange}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                >
+                  <option value="" disabled>
+                    Pilih akhir waktu
+                  </option>
+                  {end_time.map((end) => (
+                    <option key={end.id} value={end.value}>
+                      {end.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex gap-2 mt-6">
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                  Simpan
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                  onClick={() => setShowEditModal(false)}
+                >
+                  Batal
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
       <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
         <div className="max-w-full overflow-x-auto">
           <div className="min-w-[1102px]">
@@ -173,6 +338,12 @@ export default function Transactions() {
                     isHeader
                     className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                   >
+                    Price
+                  </TableCell>
+                  <TableCell
+                    isHeader
+                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
+                  >
                     Studio
                   </TableCell>
                   <TableCell
@@ -195,17 +366,17 @@ export default function Transactions() {
               {transactions.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={7}
+                    colSpan={8}
                     className="px-4 py-3 text-center text-theme-sm dark:text-gray-400"
                   >
                     <span className="text-gray-500">No data available</span>
                   </TableCell>
                 </TableRow>
               ) : (
-                transactions.map((transaction, index) => (
+                currentTransactions.map((transaction, index) => (
                   <TableRow key={index + 1}>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
-                      {index + 1}
+                        {indexOfFirstItem + index + 1}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                       {transaction.user.name}
@@ -217,15 +388,18 @@ export default function Transactions() {
                       {transaction.order_date} | {transaction.start_time} - {transaction.end_time}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
+                      {"Rp. " + Number(transaction.package.harga).toLocaleString("id-ID")}
+                    </TableCell>
+                    <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                       {transaction.photo_studio.nama_studio}
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                       <Badge
                         size="sm"
                         color={
-                          transaction.status === "Paid"
+                          transaction.status === "paid"
                             ? "success"
-                            : transaction.status === "Pending"
+                            : transaction.status === "pending"
                             ? "warning"
                             : transaction.status === "Completed"
                             ? "primary"
@@ -236,10 +410,18 @@ export default function Transactions() {
                       </Badge>
                     </TableCell>
                     <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400 flex items-center">
-                      <span className="w-4 menu-item-icon-warning mr-3 cursor-pointer">
+                      <span
+                        className="w-4 menu-item-icon-warning mr-3 cursor-pointer"
+                        onClick={() => handleEditClick(transaction)}
+                        title="Edit Transaction"
+                      >
                         <PencilIcon />
                       </span>
-                      <span className="w-4 menu-item-icon-error cursor-pointer">
+                      <span
+                        className="w-4 menu-item-icon-error cursor-pointer"
+                        onClick={() => deleteTransaction(transaction.id)}
+                        title="Delete Transaction"
+                      >
                         <TrashBinIcon />
                       </span>
                     </TableCell>
@@ -250,6 +432,37 @@ export default function Transactions() {
             </Table>
           </div>
         </div>
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-2 py-4">
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+            >
+              Prev
+            </button>
+            {[...Array(totalPages)].map((_, i) => (
+              <button
+                key={i}
+                onClick={() => handlePageChange(i + 1)}
+                className={`px-3 py-1 rounded ${
+                  currentPage === i + 1
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200 text-gray-700"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className="px-3 py-1 rounded bg-gray-200 text-gray-700 disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

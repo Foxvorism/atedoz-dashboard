@@ -613,6 +613,13 @@ span.flatpickr-weekday,
 .event-fc-color .fc-event-title {
   @apply p-0 text-sm font-normal text-gray-700;
 }
+.fc-event-main {
+  color: inherit !important;
+}
+.fc .fc-event-main-frame {
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
 .fc-daygrid-event-dot {
   @apply w-1 h-5 ml-0 mr-3 border-none rounded-sm;
 }
