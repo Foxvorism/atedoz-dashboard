@@ -25,16 +25,16 @@ type NavItem = {
 };
 
 const mainItems: NavItem[] = [
-  {
-    icon: <GridIcon />,
-    name: "Dashboard",
-    path: "/",
-  },
-  {
-    icon: <GroupIcon />,
-    name: "Users",
-    path: "/users",
-  },
+  // {
+  //   icon: <GridIcon />,
+  //   name: "Dashboard",
+  //   path: "/",
+  // },
+  // {
+  //   icon: <GroupIcon />,
+  //   name: "Users",
+  //   path: "/users",
+  // },
   // {
   //   icon: <CalenderIcon />,
   //   name: "Schedule",
@@ -45,11 +45,11 @@ const mainItems: NavItem[] = [
     name: "Pricelist",
     path: "/pricelist",
   },
-  {
-    icon: <PieChartIcon />,
-    name: "Transaction",
-    path: "/transaction",
-  },
+  // {
+  //   icon: <PieChartIcon />,
+  //   name: "Transaction",
+  //   path: "/transaction",
+  // },
   // {
   //   icon: <GridIcon />,
   //   name: "Dashboard",
@@ -82,11 +82,11 @@ const mainItems: NavItem[] = [
 ];
 
 const othersItems: NavItem[] = [
-  {
-    icon: <ListIcon />,
-    name: "Studios",
-    path: "/studios",
-  },
+  // {
+  //   icon: <ListIcon />,
+  //   name: "Studios",
+  //   path: "/studios",
+  // },
   {
     icon: <TableIcon />,
     name: "Events",
