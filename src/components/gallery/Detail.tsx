@@ -71,7 +71,7 @@ export default function Gallery({ id }: { id: number }) {
 
     const getGalleryPhotos = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/events/${id}`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/categories/${id}`, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -101,7 +101,7 @@ export default function Gallery({ id }: { id: number }) {
 
     return (
         <div>
-            <Link href={`/events/detail/${id}/input`}>
+            <Link href={`/gallery/detail/${id}/input`}>
                 <button className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]">
                     <div className="mr-1">
                         <GridIcon />

@@ -10,11 +10,12 @@ export const metadata: Metadata = {
     // other metadata
   };
   
-  export default function page() {
+  export default async function page({ params }: { params: Promise<{ id: string }> }) {
+    const { id } = await params;
     return (
       <div>
         <PageBreadcrumb pageTitle2="Input" pageTitle1="Gallery" />
-        <GalleryInput />
+        <GalleryInput id={Number(id)}/>
       </div>
     );
   }

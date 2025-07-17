@@ -1,10 +1,10 @@
-import EditForm from '@/components/articles/Edit';
+import EditForm from '@/components/categories/Edit';
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 
 export const metadata = {
-    title: "Edit Article | Atedoz Space Admin Dashboard",
+    title: "Edit Kategori | Atedoz Space Admin Dashboard",
     description:
-      "Halaman Edit Artikel untuk Admin",
+      "Halaman Edit Kategori untuk Admin",
     // other metadata
   };
 
@@ -16,7 +16,7 @@ export default async function EditArticlePage({ params }:{ params: Promise<{ id:
     const { id } = await params;
   return (
         <div>
-          <PageBreadcrumb pageTitle2="Edit" pageTitle1="Article" />
+          <PageBreadcrumb pageTitle2="Edit" pageTitle1="Category" />
           <EditForm id={Number(id)} />
         </div>
       );

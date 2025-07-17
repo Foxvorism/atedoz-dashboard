@@ -16,10 +16,9 @@ export default function EditForm({ id }: Props) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isNewFile, setIsNewFile] = useState(false);
 
-  const [articleData, setArticleData] = useState({
+  const [categoryData, setCategoryData] = useState({
     id: 0,
     judul: "",
-    content: "",
     thumbnail: null as File | null,
   });
 
@@ -29,7 +28,7 @@ export default function EditForm({ id }: Props) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
-        setArticleData((prev) => ({ ...prev, thumbnail: file }));
+        setCategoryData((prev) => ({ ...prev, thumbnail: file }));
         setIsNewFile(true);
       };
       reader.readAsDataURL(file);
@@ -46,10 +45,10 @@ export default function EditForm({ id }: Props) {
     },
   });
 
-  const fetchArticleById = async () => {
+  const fetchCategoryById = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/articles/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/categories/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -64,15 +63,14 @@ export default function EditForm({ id }: Props) {
         Swal.fire({
           icon: "error",
           title: "Data tidak valid",
-          text: "Data artikel yang diterima tidak valid atau kosong.",
+          text: "Data category yang diterima tidak valid atau kosong.",
         });
         return;
       }
 
-      setArticleData({
+      setCategoryData({
         id: data.id ?? 0,
         judul: data.judul ?? "",
-        content: data.content ?? "",
         thumbnail: null,
       });
 
@@ -84,37 +82,29 @@ export default function EditForm({ id }: Props) {
 
       setIsNewFile(false);
     } catch (error) {
-      console.error("Error fetching article:", error);
+      console.error("Error fetching category:", error);
     }
   };
 
   useEffect(() => {
-    fetchArticleById();
+    fetchCategoryById();
   }, [id]);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setArticleData((prev) => ({ ...prev, judul: e.target.value }));
+    setCategoryData((prev) => ({ ...prev, judul: e.target.value }));
   };
 
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setArticleData((prev) => ({ ...prev, content: e.target.value }));
-  };
-
-  const updateArticle = async (e: FormEvent) => {
+  const updateCategory = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!articleData.judul.trim()) {
+    if (!categoryData.judul.trim()) {
       Swal.fire("Error", "Judul tidak boleh kosong", "error");
-      return;
-    }
-    if (!articleData.content.trim()) {
-      Swal.fire("Error", "Konten tidak boleh kosong", "error");
       return;
     }
 
     Swal.fire({
       title: "Loading...",
-      text: "Sedang mengupdate artikel...",
+      text: "Sedang mengupdate category...",
       allowOutsideClick: false,
       didOpen: () => {
         Swal.showLoading();
@@ -123,16 +113,15 @@ export default function EditForm({ id }: Props) {
 
     const formData = new FormData();
     formData.append("_method", "PUT");
-    formData.append("judul", articleData.judul);
-    formData.append("content", articleData.content);
+    formData.append("judul", categoryData.judul);
 
-    if (isNewFile && articleData.thumbnail instanceof File) {
-      formData.append("thumbnail", articleData.thumbnail);
+    if (isNewFile && categoryData.thumbnail instanceof File) {
+      formData.append("thumbnail", categoryData.thumbnail);
     }
 
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/articles/${id}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/categories/${id}`,
         formData,
         {
           headers: {
@@ -145,28 +134,28 @@ export default function EditForm({ id }: Props) {
       Swal.fire({
         icon: "success",
         title: "Berhasil!",
-        text: "Artikel berhasil diperbarui.",
+        text: "Kategori berhasil diperbarui.",
         timer: 2000,
         showConfirmButton: false,
       });
 
-      fetchArticleById();
+      fetchCategoryById();
     } catch (error) {
       console.error(error);
       Swal.fire({
         icon: "error",
         title: "Gagal",
-        text: "Gagal memperbarui artikel.",
+        text: "Gagal memperbarui kategori.",
       });
     }
   };
 
   return (
-    <form onSubmit={updateArticle}>
-      <ComponentCard title="Edit Article Form" href="/articles">
+    <form onSubmit={updateCategory}>
+      <ComponentCard title="Edit Category Form" href="/categories">
         <div className="space-y-6">
           <div>
-            <Label>Select a Photo</Label>
+            <Label>Select a Thumbnail</Label>
              {/* Preview the selected image */}
             {imagePreview && (
               <div className="mb-4 flex justify-center">
@@ -181,7 +170,7 @@ export default function EditForm({ id }: Props) {
                     onClick={() => {
                       setImagePreview(null);
                       console.log("imagePreview", imagePreview);
-                      setArticleData({ ...articleData, thumbnail: null });
+                      setCategoryData({ ...categoryData, thumbnail: null });
                     }}
                     type="button"
                   >
@@ -242,22 +231,12 @@ export default function EditForm({ id }: Props) {
           </div>
 
           <div>
-            <Label>Article Title</Label>
+            <Label>Category Title</Label>
             <Input
               type="text"
-              placeholder="Masukkan judul artikel"
-              value={articleData.judul}
+              placeholder="Masukkan judul kategori"
+              value={categoryData.judul}
               onChange={handleTitleChange}
-            />
-          </div>
-
-          <div>
-            <Label>Content</Label>
-            <TextArea
-              value={articleData.content}
-              onChange={(val: string) => setArticleData({ ...articleData, content: val })}
-              rows={10}
-              placeholder="Masukkan konten artikel"
             />
           </div>
 
@@ -266,7 +245,7 @@ export default function EditForm({ id }: Props) {
               type="submit"
               className="flex w-full justify-center text-lg items-center rounded-lg border h-auto text-center p-2 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
             >
-              Update Article
+              Update Category
             </button>
           </div>
         </div>

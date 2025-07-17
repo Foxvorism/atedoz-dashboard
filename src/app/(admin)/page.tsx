@@ -1,6 +1,8 @@
 import { IndexAdmin } from "@/components/ecommerce/IndexAdmin";
 import MonthlySalesChart from "@/components/ecommerce/MonthlySalesChart";
 import Schedule from "@/components/ecommerce/Schedule";
+import PageBreadcrumb from "@/components/common/PageBreadCrumb";
+import Pricelist from "@/components/pricelist/Pricelist";
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 
@@ -21,9 +23,11 @@ export default async function Ecommerce() {
   return (
     <div className="grid grid-cols-6 gap-4 md:gap-6">
       <div className="col-span-12 space-y-6 xl:col-span-7">
-        <IndexAdmin />
+        <PageBreadcrumb pageTitle2={null} pageTitle1="Pricelist" />
+        <Pricelist />
+        {/* <IndexAdmin /> */}
         {/* <MonthlySalesChart /> */}
-        <Schedule />
+        {/* <Schedule /> */}
       </div>
     </div>
   );

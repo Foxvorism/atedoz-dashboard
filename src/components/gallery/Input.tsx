@@ -6,8 +6,9 @@ import Swal from "sweetalert2";
 import ComponentCard from "../common/ComponentCard";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
+import { usePathname } from "next/navigation";
 
-export default function GalleryInput() {
+export default function GalleryInput({ id }: { id: number }) {
     // State untuk file foto dan preview
     const [foto, setFoto] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -15,12 +16,13 @@ export default function GalleryInput() {
     // State untuk deskripsi dan studio
     const [deskripsi, setDeskripsi] = useState("");
     const [studio, setStudio] = useState("");
+    const pathname = usePathname();
 
     // Dropdown options studio
-    const options = [
-        { value: "1", label: "Atedoz Space G.g Kelor" },
-        { value: "2", label: "Atedoz Space Bogor Baru" },
-    ];
+    // const category = [
+    //     { value: "1", label: "Atedoz Space G.g Kelor" },
+    //     { value: "2", label: "Atedoz Space Bogor Baru" },
+    // ];
 
     // Dropzone handler
     const onDrop = (acceptedFiles: File[]) => {
@@ -88,6 +90,11 @@ export default function GalleryInput() {
         try {
             const formData = new FormData();
             formData.append("foto", foto);
+            if (pathname.startsWith("/events")) {
+                formData.append("event_id", id.toString());
+            } else if (pathname.startsWith("/category")) {
+                formData.append("category_id", id.toString());
+            }
             formData.append("deskripsi", deskripsi);
             // formData.append("photo_studio_id", studio); // ✅ fix: gunakan variabel yang benar
 
@@ -130,7 +137,7 @@ export default function GalleryInput() {
 
     return (
         <form onSubmit={createGallery} className="space-y-6">
-            <ComponentCard title="New Gallery Form" href="/gallery">
+            <ComponentCard title="New Gallery Form" href={pathname.startsWith("/events") ? `/events/detail/${id}` : `/gallery/detail/${id}`}>
                 <div className="space-y-6">
                     <div>
                         <Label>Select a Photo</Label>

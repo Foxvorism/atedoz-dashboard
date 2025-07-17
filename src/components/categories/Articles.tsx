@@ -5,41 +5,38 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { PageIcon, PencilIcon, TrashBinIcon } from "../../icons/index";
 
-interface Article {
+interface Category {
     id: number;
-    url: string;
-    alt: string;
-    title: string;
     judul: string;
     thumbnail?: string;
     updated_at:string;
 }
 
-const Articles: React.FC = () => {
-    const [articles, setArticles] = useState<Article[]>([]);
+const Categories: React.FC = () => {
+    const [categories, setCategories] = useState<Category[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchArticles = async () => {
+    const fetchCategory = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/articles/`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/categories/`, {
                 headers: {
                     'content-type': 'application/json',
                 }
             });
 
             if (Array.isArray(response.data)) {
-                setArticles(response.data);
+                setCategories(response.data);
             } else {
                 console.warn("⚠️ Format response tidak sesuai harapan:", response.data);
             }
         } catch (error) {
             console.error("Server error:", error);
-            setError("Terjadi kesalahan saat mengambil data artikel.");
+            setError("Terjadi kesalahan saat mengambil data kategori.");
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Terjadi kesalahan saat mengambil data artikel.',
+                text: 'Terjadi kesalahan saat mengambil data kategori.',
             });
         } finally {
             setLoading(false);
@@ -59,13 +56,13 @@ const Articles: React.FC = () => {
     }
 
     useEffect(() => {
-        fetchArticles();
+        fetchCategory();
     }, []);
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
-    const sortedArticles = [...articles].sort((a, b) => {
+    const sortedCategories = [...categories].sort((a, b) => {
         const dateA = new Date(a.updated_at).getTime();
         const dateB = new Date(b.updated_at).getTime();
         return dateA - dateB;
@@ -85,14 +82,14 @@ const Articles: React.FC = () => {
 
     if (result.isConfirmed) {
         try {
-            await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/articles/${id}`, {
+            await axios.delete(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/categories/${id}`, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
 
             // Update UI: filter out artikel yang dihapus
-            setArticles(prev => prev.filter(article => article.id !== id));
+            setCategories(prev => prev.filter(category => category.id !== id));
 
             Swal.fire({
                 icon: "success",
@@ -114,36 +111,36 @@ const Articles: React.FC = () => {
 
     return(
         <div>
-            <Link href="/articles/input">
+            <Link href="/categories/input">
                 <button 
                     className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
                 >
                     <div className="mr-1">
                         <PageIcon />
                     </div>
-                    Create a new Article
+                    Create a new Category
                 </button>
             </Link>
 
             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {sortedArticles.map((article) => (
+                {sortedCategories.map((category) => (
                     <div
-                        key={article.id}
+                        key={category.id}
                         className="relative w-full bg-gray-100 rounded-lg overflow-hidden hover:scale-[102%]"
                     >
-                        <Link href={`/articles/detail/${article.id}`}>
+                        <Link href={`/gallery/detail/${category.id}`}>
                             <img
-                                src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${article.thumbnail}`}
-                                alt={article.judul}
+                                src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${category.thumbnail}`}
+                                alt={category.judul}
                                 className="aspect-video w-full object-cover cursor-pointer"
                                 />
                             <div className="p-4">
-                                <h2 className="text-xl truncate">{article.judul}</h2>
-                                <h3 className="text-gray-400 text-xs">{formatTanggalIndo(article.updated_at)}</h3>
+                                <h2 className="text-xl truncate">{category.judul}</h2>
+                                <h3 className="text-gray-400 text-xs">{formatTanggalIndo(category.updated_at)}</h3>
                             </div>
                         </Link>
                         <div className="grid grid-cols-2 gap-2 px-4 pb-4">
-                            <Link href={`/articles/edit/${article.id}`} className="w-full">
+                            <Link href={`/categories/edit/${category.id}`} className="w-full">
                                 <button
                                     className="bg-yellow-500 p-1 rounded-md text-black flex justify-center items-center w-full"
                                     onClick={(e) => e.stopPropagation()} // biar gak trigger modal
@@ -155,8 +152,8 @@ const Articles: React.FC = () => {
                             <button
                                 className="bg-red-500 p-1 rounded-md text-white flex justify-center items-center"
                                 onClick={(e) => {
-                                    e.stopPropagation(); // biar gak ke-trigger modal/article click
-                                    handleDelete(article.id);
+                                    e.stopPropagation(); // biar gak ke-trigger modal/category click
+                                    handleDelete(category.id);
                                 }}
                             >
                                 <TrashBinIcon className="mr-1" />
@@ -170,4 +167,4 @@ const Articles: React.FC = () => {
     );
 };
 
-export default Articles;
+export default Categories;

@@ -1,10 +1,11 @@
 "use client";
+import axios from "axios";
 import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { GridIcon, TrashBinIcon } from "../../icons";
+import { GridIcon, TrashBinIcon, PencilIcon } from "../../icons";
 
 type Photo = {
     id: number;
@@ -12,144 +13,93 @@ type Photo = {
     deskripsi: string;
 };
 
+interface Category {
+    id: number;
+    judul: string;
+    thumbnail?: string;
+    updated_at:string;
+}
+
 export default function Gallery() {
     const { isOpen: isModalPhotoOpen, openModal: openModalPhoto, closeModal: closeModalPhoto } = useModal();
     const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
     const [photos, setPhotos] = useState<Photo[]>([]);
-
-    const handlePhotoClick = (photo: Photo) => {
-        setSelectedPhoto(photo);
-        openModalPhoto();
-    };
-
-    const handleDelete = async (id: number) => {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!",
-        }).then(async (result) => {
-            if (result.isConfirmed) {
-                Swal.fire({
-                    title: "Loading...",
-                    text: "Mohon tunggu sebentar...",
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    },
-                });
-
-                try {
-                    const response = await fetch(
-                        `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/galleries/${id}`,
-                        {
-                            method: "DELETE",
-                            headers: {
-                                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                            },
-                        }
-                    );
-
-                    if (!response.ok) {
-                        throw new Error("Failed to delete");
-                    }
-
-                    await getGalleryPhotos(); // refresh data setelah delete
-
-                    Swal.fire("Deleted!", "Your file has been deleted.", "success");
-                } catch (error) {
-                    console.error("❌ Error deleting photo:", error);
-                    Swal.fire("Error!", "Failed to delete the file.", "error");
-                }
-            }
-        });
-    };
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
 
-    const getGalleryPhotos = async () => {
+    const fetchCategory = async () => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/galleries`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/categories/`, {
                 headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
+                    'content-type': 'application/json',
+                }
             });
 
-            const data = await response.json();
-
-            if (Array.isArray(data)) {
-                setPhotos(data);
+            if (Array.isArray(response.data)) {
+                setCategories(response.data);
             } else {
-                console.warn("⚠️ Unexpected response format:", data);
+                console.warn("⚠️ Format response tidak sesuai harapan:", response.data);
             }
         } catch (error) {
-            console.error("❌ Failed to fetch gallery photos:", error);
+            console.error("Server error:", error);
+            setError("Terjadi kesalahan saat mengambil data kategori.");
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Terjadi kesalahan saat mengambil data kategori.',
+            });
+        } finally {
+            setLoading(false);
         }
     };
 
-    useEffect(() => {
-        getGalleryPhotos();
-    }, []);
+    function formatTanggalIndo(dateString: string): string {
+        if (!dateString) return "-";
+        const date = new Date(dateString);
+        if (isNaN(date.getTime())) return "-";
 
-    const sortedPhotos = [...photos].sort((a, b) => b.id - a.id);
+        return new Intl.DateTimeFormat("id-ID", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+        }).format(date);
+    }
+
+    const sortedCategories = [...categories].sort((a, b) => {
+        const dateA = new Date(a.updated_at).getTime();
+        const dateB = new Date(b.updated_at).getTime();
+        return dateA - dateB;
+    });
+
+    useEffect(() => {
+        fetchCategory();
+    }, []);
 
     return (
         <div>
-            <Link href="/gallery/input">
-                <button className="flex w-full justify-center items-center rounded-lg border h-auto text-center p-3 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]">
-                    <div className="mr-1">
-                        <GridIcon />
-                    </div>
-                    Add Photo to the Gallery
-                </button>
-            </Link>
 
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
-                {sortedPhotos.map((photo) => (
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {sortedCategories.map((category) => (
                     <div
-                        key={photo.id}
-                        className="w-full bg-gray-100 rounded-lg hover:scale-[102%] transition"
-                        onClick={() => handlePhotoClick(photo)}
+                        key={category.id}
+                        className="relative w-full bg-gray-100 rounded-lg overflow-hidden hover:scale-[102%]"
                     >
-                        <div className="relative w-full overflow-hidden rounded-t-lg">
+                        <Link href={`/gallery/detail/${category.id}`}>
                             <img
-                                src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${photo.foto}`}
-                                alt={photo.deskripsi || `Photo ${photo.id}`}
-                                className="object-cover w-full h-full cursor-pointer aspect-square"
-                            />
-                        </div>
-
-                        <button
-                            className="flex items-center justify-center w-full p-1 text-white bg-red-500 rounded-b-lg hover:bg-red-600"
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                handleDelete(photo.id);
-                            }}
-                        >
-                            <TrashBinIcon className="mr-1" />
-                            <span>Delete</span>
-                        </button>
+                                src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${category.thumbnail}`}
+                                alt={category.judul}
+                                className="aspect-video w-full object-cover cursor-pointer"
+                                />
+                            <div className="p-4">
+                                <h2 className="text-xl truncate">{category.judul}</h2>
+                                <h3 className="text-gray-400 text-xs">{formatTanggalIndo(category.updated_at)}</h3>
+                            </div>
+                        </Link>
                     </div>
                 ))}
             </div>
-
-            {isModalPhotoOpen && selectedPhoto && (
-                <Modal isOpen={isModalPhotoOpen} onClose={closeModalPhoto} className="lg:max-w-[45vw] max-w-[80vw]">
-                    <div className="w-full">
-                        <img
-                            src={`${process.env.NEXT_PUBLIC_BACKEND_HOST}/photos/${selectedPhoto.foto}`}
-                            alt={selectedPhoto.deskripsi}
-                            className="object-cover w-full rounded-xl aspect-square"
-                        />
-                        {selectedPhoto.deskripsi && (
-                            <p className="mt-2 text-sm text-center text-gray-700">{selectedPhoto.deskripsi}</p>
-                        )}
-                    </div>
-                </Modal>
-            )}
         </div>
     );
 }

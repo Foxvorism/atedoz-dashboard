@@ -215,28 +215,6 @@ export default function EventInput() {
                     </div>
 
                     <div>
-                        <Label>Event Description</Label>
-                        <TextArea
-                            value={eventDetails.deskripsi_event}
-                            onChange={handleDescriptionChange}
-                            rows={10}
-                            placeholder="Masukan deskripsi acara"
-                        />
-
-                        <div>
-                            <Label>Lokasi</Label>
-                            <Input
-                                type="text"
-                                name="lokasi"
-                                value={eventDetails.lokasi}
-                                onChange={handleInputChange}
-                                placeholder="Masukan lokasi acara"
-                            />
-                        </div>
-
-                    </div>
-
-                    <div>
                         <button
                             type="submit"
                             className="flex w-full justify-center text-lg items-center rounded-lg border h-auto text-center p-2 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"

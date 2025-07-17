@@ -1,5 +1,5 @@
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
-import ArticleDetail from "@/components/articles/Detail";
+import ArticleDetail from "@/components/categories/Detail";
 
 export const metadata = {
     title: "Detail Artikel",
@@ -13,7 +13,7 @@ export default async function ArticleDetailPage({ params }: { params: Promise<{ 
 
     return (
         <div>
-            <PageBreadcrumb pageTitle2="Detail" pageTitle1="Articles" />
+            <PageBreadcrumb pageTitle2="Detail" pageTitle1="Categories" />
             <ArticleDetail id={Number(id)} />
         </div>
     );

@@ -9,13 +9,12 @@ import { ChevronDownIcon, EyeCloseIcon, EyeIcon } from '../../icons';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-export default function ArticleInput() {
+export default function CategoryInput() {
 
     const [message, setMessage] = useState("");
     const [imagePreview, setImagePreview] = useState<string | null>(null);
-    const [articleData, setArticleData] = useState({
+    const [categoryData, setCategoryData] = useState({
         judul: "",
-        content: "",
         thumbnail: null as File | null, 
     });
 
@@ -25,7 +24,7 @@ export default function ArticleInput() {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result as string);
-                setArticleData({ ...articleData, thumbnail: file });
+                setCategoryData({ ...categoryData, thumbnail: file });
             };
             reader.readAsDataURL(file);
         }
@@ -42,14 +41,10 @@ export default function ArticleInput() {
     });
     
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setArticleData({ ...articleData, judul: e.target.value });
-      };
-      
-      const handleContentChange = (value: string) => {
-        setArticleData({ ...articleData, content: value });
+        setCategoryData({ ...categoryData, judul: e.target.value });
       };
 
-    const createArticle = async (e: FormEvent) => {
+    const createCategory = async (e: FormEvent) => {
         e.preventDefault();
         Swal.fire({
             title: 'Loading...',
@@ -61,15 +56,14 @@ export default function ArticleInput() {
         });
 
         const bodyFormData = new FormData();
-        bodyFormData.append('judul', articleData.judul);
-        bodyFormData.append('content', articleData.content);
-        if (articleData.thumbnail) {
-            bodyFormData.append('thumbnail', articleData.thumbnail);
+        bodyFormData.append('judul', categoryData.judul);
+        if (categoryData.thumbnail) {
+            bodyFormData.append('thumbnail', categoryData.thumbnail);
         }
 
         try {
             const res = await axios.post(
-                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/articles`,
+                `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/categories`,
                 bodyFormData,
                 {
                     headers: {
@@ -82,9 +76,8 @@ export default function ArticleInput() {
             console.log(res.data);
             
             // Reset form
-            setArticleData({
+            setCategoryData({
                 judul: "",
-                content: "",
                 thumbnail: null
             });
 
@@ -111,9 +104,8 @@ export default function ArticleInput() {
             });
 
             // Reset judul dan konten, tapi pertahankan preview jika ada URL dari server
-            setArticleData({
+            setCategoryData({
                 judul: "",
-                content: "",
                 thumbnail: null,
             });
         } catch (error) {
@@ -127,11 +119,11 @@ export default function ArticleInput() {
     };
 
   return (
-    < form onSubmit={createArticle}>
-        <ComponentCard title="New Article Form" href="/articles">
+    < form onSubmit={createCategory}>
+        <ComponentCard title="New Category Form" href="/categories">
             <div className="space-y-6">
                 <div>
-                    <Label>Select a Photo</Label>
+                    <Label>Select a Thumbnail</Label>
                     {/* Preview the selected image */}
                     {imagePreview && (
                         <div className="mb-4 flex justify-center">
@@ -204,22 +196,12 @@ export default function ArticleInput() {
                 </div>
 
                 <div>
-                    <Label>Article Title</Label>
+                    <Label>Category Title</Label>
                     <Input 
                     type="text" 
                     placeholder="Masukan judul artikel" 
-                    value={articleData.judul}
+                    value={categoryData.judul}
                     onChange={handleTitleChange} />
-                </div>
-                
-                <div>
-                    <Label>Content</Label>
-                    <TextArea
-                        value={articleData.content}
-                        onChange={handleContentChange}
-                        rows={10}
-                        placeholder="Masukan konten artikel"
-                    />
                 </div>
 
                 <div>
@@ -227,7 +209,7 @@ export default function ArticleInput() {
                         type="submit"
                         className="flex w-full justify-center text-lg items-center rounded-lg border h-auto text-center p-2 mb-4 bg-[var(--color-brand-600)] text-white hover:bg-[var(--color-brand-500)]"
                     >
-                        Submit New Article
+                        Submit New Category
                     </button>
                 </div>
             </div>

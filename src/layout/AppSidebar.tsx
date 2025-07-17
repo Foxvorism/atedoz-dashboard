@@ -94,8 +94,8 @@ const othersItems: NavItem[] = [
   },
   {
     icon: <PageIcon />,
-    name: "Articles",
-    path: "/articles",
+    name: "Categories",
+    path: "/categories",
   },
   {
     icon: <TaskIcon />,
