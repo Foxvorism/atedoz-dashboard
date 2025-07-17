@@ -31,7 +31,7 @@ export default function Gallery() {
 
     const fetchCategory = async () => {
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/categories/`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/categories`, {
                 headers: {
                     'content-type': 'application/json',
                 }
