@@ -91,9 +91,12 @@ export default function GalleryInput({ id }: { id: number }) {
             const formData = new FormData();
             formData.append("foto", foto);
             if (pathname.startsWith("/events")) {
+                console.log("Event ID:", id);
                 formData.append("event_id", id.toString());
-            } else if (pathname.startsWith("/category")) {
+            } else if (pathname.startsWith("/gallery")) {
+                console.log("Category ID:", id);
                 formData.append("category_id", id.toString());
+                console.log('formData:', formData);
             }
             formData.append("deskripsi", deskripsi);
             // formData.append("photo_studio_id", studio); // ✅ fix: gunakan variabel yang benar

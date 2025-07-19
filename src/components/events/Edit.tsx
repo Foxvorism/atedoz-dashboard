@@ -39,10 +39,8 @@ export default function EventsEdit({ id }: { id: number }) {
     const [event, setEvent] = useState({
         id: 0,
         nama_event: "",
-        deskripsi_event: "",
         tanggal_event: null as Date | null,
         thumbnail: null as File | string | null,
-        lokasi: ""
     });
 
     const fetchEventsById = async () => {
@@ -72,10 +70,8 @@ export default function EventsEdit({ id }: { id: number }) {
             setEvent({
                 id: data.id ?? 0,
                 nama_event: data.nama_event ?? "",
-                deskripsi_event: data.deskripsi_event ?? "",
                 tanggal_event: data.tanggal_event ? new Date(data.tanggal_event) : null,
                 thumbnail: data.thumbnail ?? null,
-                lokasi: data.lokasi ?? "",
             });
 
             if (data.thumbnail) {
@@ -110,14 +106,10 @@ export default function EventsEdit({ id }: { id: number }) {
         const formData = new FormData();
         formData.append("_method", "PUT"); // Laravel method spoofing
         formData.append("nama_event", event.nama_event);
-        formData.append("deskripsi_event", event.deskripsi_event);
         formData.append(
             "tanggal_event",
             event.tanggal_event ? event.tanggal_event.toISOString().split("T")[0] : ""
         );
-        if (event.lokasi) {
-            formData.append("lokasi", event.lokasi);
-        }
 
         // Handle thumbnail properly based on what type it is
         if (isNewFile && event.thumbnail instanceof File) {
@@ -171,7 +163,7 @@ export default function EventsEdit({ id }: { id: number }) {
             <ComponentCard title="Edit Event Form" href="/events">
                 <div className="space-y-6">
                     <div>
-                        <Label>Select a Photo</Label>
+                        <Label>Select a Thumbnail</Label>
                         {imagePreview ? (
                             <div className="flex justify-center mb-4">
                                 <img
@@ -261,28 +253,6 @@ export default function EventsEdit({ id }: { id: number }) {
                                 setEvent({ ...event, tanggal_event: date || null });
                             }}
 
-                        />
-                    </div>
-                    <div>
-                        <Label htmlFor="tm">Deskripsi Event</Label>
-                        <div className="relative">
-                            <Input
-                                type="text"
-                                placeholder="Masukan koordinat garis lintang"
-                                name="deskripsi_event"
-                                value={event.deskripsi_event}
-                                onChange={(e) => setEvent({ ...event, deskripsi_event: e.target.value })}
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <Label>Lokasi</Label>
-                        <Input
-                            type="text"
-                            name="lokasi"
-                            value={event.lokasi}
-                            onChange={(e) => setEvent({ ...event, lokasi: e.target.value })}
-                            placeholder="Masukan lokasi event"
                         />
                     </div>
                     <div>

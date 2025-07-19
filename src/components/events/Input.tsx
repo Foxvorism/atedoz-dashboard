@@ -128,7 +128,7 @@ export default function EventInput() {
             <ComponentCard title="New Event Form" href="/events">
                 <div className="space-y-6">
                     <div>
-                        <Label>Select a Photo</Label>
+                        <Label>Select a Thumbnail</Label>
                         {imagePreview && (
                             <div className="flex justify-center mb-4">
                                 <img src={imagePreview} alt="Preview" className="w-[40vw] aspect-[3/2] object-cover rounded-lg border border-gray-300 bg-transparent mr-3" />
