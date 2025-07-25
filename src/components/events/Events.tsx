@@ -11,7 +11,7 @@ const Events: React.FC = () => {
     thumbnail: string;
     nama_event: ReactNode;
     tanggal_event: string;
-    updated_at: any; id: number; url: string; alt: string; title: string
+    updated_at: string; id: number; url: string; alt: string; title: string
   }[]>([]);
   const [selectedEvent, setSelectedEvent] = useState<{ id: number; url: string; alt: string; title: string } | null>(null);
   // Function to fetch events from the API

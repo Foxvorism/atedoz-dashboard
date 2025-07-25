@@ -1,8 +1,7 @@
 "use client";
-import { getUser } from "@/hooks/auth";
-import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
+import { logout, getUser } from "@/hooks/auth";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,7 +48,7 @@ export default function UserDropdown() {
 
       <Dropdown
         isOpen={isOpen}
-        onClose={UserDropdown}
+        onClose={() => setIsOpen(false)}
         className="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
       >
         <div>
@@ -60,8 +59,13 @@ export default function UserDropdown() {
             {user?.email}
           </span>
         </div>
-        <Link
-          href="/signin"
+        <button
+          type="button"
+          onClick={() => {
+            logout();
+            setUser(null); // Optional: update UI
+            setIsOpen(false); // Optional: close dropdown
+          }}
           className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
         >
           <svg
@@ -80,7 +84,7 @@ export default function UserDropdown() {
             />
           </svg>
           Sign out
-        </Link>
+        </button>
       </Dropdown>
     </div>
   );

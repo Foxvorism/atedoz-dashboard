@@ -7,6 +7,7 @@ import { login } from '@/hooks/auth';
 import { EyeCloseIcon, EyeIcon } from "@/icons";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import Cookies from "js-cookie";
 
 export default function SignInForm() {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,6 +27,7 @@ export default function SignInForm() {
     const result = await login(email, password);
 
     if (result.success) {
+      Cookies.set("token", result.access_token ?? "", { expires: 7 });
       router.push("/pricelist"); // arahkan ke halaman dashboard
     } else {
       if (typeof result.message === "object" && (result.message)) {

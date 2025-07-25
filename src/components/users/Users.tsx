@@ -13,7 +13,7 @@ import {
   GroupIcon
 } from "../../icons/index";
 
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import Link from "next/link";
 import Badge from "../ui/badge/Badge";
 
@@ -92,7 +92,8 @@ export default function Users() {
       } else {
         console.warn("⚠️ Format response tidak sesuai harapan:", response.data);
       }
-    } catch (error: any) {
+    } catch (error) {
+      const err = error as AxiosError<{ error?: string; message?: string }>;
       if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
         Swal.fire({
           icon: 'error',
@@ -189,7 +190,7 @@ export default function Users() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  userData.map((item: any, index) => (
+                  userData.map((item: User, index) => (
                     <TableRow key={item.id}>
                       <TableCell className="px-4 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         {index + 1}

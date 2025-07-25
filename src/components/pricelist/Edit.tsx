@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Swal from "sweetalert2";
@@ -127,11 +127,12 @@ export default function PricelistEdit({ id }: { id: number }) {
     }
   };
 
-  const handleError = (error: any) => {
-    if (axios.isAxiosError(error) && error.response?.status === 401) {
+  const handleError = (error: unknown) => {
+    const err = error as AxiosError<{ error?: string; message?: string }>;
+    if (axios.isAxiosError(err) && err.response?.status === 401) {
       Swal.fire({
         icon: "error",
-        title: error.response.data.message,
+        title: err.response.data.message,
         showConfirmButton: false,
         timer: 1500,
       });

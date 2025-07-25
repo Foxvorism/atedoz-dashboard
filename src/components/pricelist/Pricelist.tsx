@@ -20,10 +20,18 @@ const formatPrice = (price: number) => {
   return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
+interface PricelistItem {
+  id: number;
+  nama_paket: string;
+  harga: number;
+  deskripsi: string;
+  thumbnail: string;
+}
+
 
 export default function Pricelist() {
 
-  const [pricelist, setPricelistData] = useState<any[]>([]);
+  const [pricelist, setPricelistData] = useState<PricelistItem[]>([]);
 
   const getPriceListData = async () => {
     try {
@@ -186,7 +194,7 @@ export default function Pricelist() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  pricelist.map((item: any, index) => (
+                  pricelist.map((item: PricelistItem, index) => (
                     <TableRow key={item.id}>
                       <TableCell className="px-5 py-3 text-gray-800 text-start text-theme-sm dark:text-gray-400">
                         {index + 1}

@@ -1,5 +1,5 @@
 "use client";
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useDropzone } from "react-dropzone";
 import Swal from 'sweetalert2';
@@ -137,9 +137,10 @@ export default function EventsEdit({ id }: { id: number }) {
                 timer: 2000,
                 showConfirmButton: false,
             });
-        } catch (error: any) {
-            const message = error?.response?.data?.message || "Terjadi kesalahan. Silakan coba lagi.";
-            if (error.response?.status === 401) {
+        } catch (error) {
+            const err = error as AxiosError<{ error?: string; message?: string }>;
+            const message = err?.response?.data?.message || "Terjadi kesalahan. Silakan coba lagi.";
+            if (err.response?.status === 401) {
                 localStorage.removeItem("token");
                 window.location.href = "/signin";
             } else {

@@ -1,5 +1,5 @@
 "use client";
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import { EyeCloseIcon, EyeIcon } from '../../icons';
@@ -61,9 +61,10 @@ export default function UserInput() {
             } else {
                 console.warn("⚠️ Format response tidak sesuai harapan:", response.data);
             }
-        } catch (error: any) {
-            const message = axios.isAxiosError(error) && error.response
-                ? error.response.data.message
+        } catch (error) {
+            const err = error as AxiosError<{ error?: string; message?: string }>;
+            const message = axios.isAxiosError(err) && err.response
+                ? err.response.data.message
                 : 'Mohon coba lagi nanti.';
 
             Swal.fire({

@@ -49,7 +49,7 @@ export default function ArticleDetail({ id }: { id: number }) {
         }
     };
 
-    const handleError = (error: any) => {
+    const handleError = (error: unknown) => {
         if (axios.isAxiosError(error) && error.response?.status === 401) {
             Swal.fire({
                 icon: "error",
