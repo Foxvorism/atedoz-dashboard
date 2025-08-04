@@ -6,7 +6,7 @@ interface ComponentCardProps {
   children: React.ReactNode;
   className?: string; // Additional custom classes for styling
   desc?: string; // Description text
-  href: string;
+  href?: string;
 }
 
 const ComponentCard: React.FC<ComponentCardProps> = ({
