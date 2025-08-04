@@ -1,15 +1,8 @@
 "use client";
 import axios from "axios";
-import { useModal } from "@/hooks/useModal";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-
-type Photo = {
-    id: number;
-    foto: string;
-    deskripsi: string;
-};
 
 interface Category {
     id: number;

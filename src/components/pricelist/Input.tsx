@@ -140,7 +140,7 @@ export default function PricelistInput() {
             const token = localStorage.getItem('token');
             if (!token) return;
 
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages`, {
+            await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages`, {
                 headers: {
                     'content-type': 'application/json',
                     'Authorization': `Bearer ${token}`,
