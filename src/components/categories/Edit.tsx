@@ -6,7 +6,6 @@ import Swal from "sweetalert2";
 import ComponentCard from "../common/ComponentCard";
 import Label from "../form/Label";
 import Input from "../form/input/InputField";
-import TextArea from "../form/input/TextArea";
 
 interface Props {
   id: number;

@@ -93,7 +93,7 @@ export default function Pricelist() {
 
         try {
           // Pastikan id yang dikirimkan adalah valid
-          const res = await axios.delete(
+          await axios.delete(
             `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages/${id}`,
             {
               headers: {

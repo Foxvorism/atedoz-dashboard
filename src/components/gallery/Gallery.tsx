@@ -1,11 +1,9 @@
 "use client";
 import axios from "axios";
-import { Modal } from "@/components/ui/modal";
 import { useModal } from "@/hooks/useModal";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { GridIcon, TrashBinIcon, PencilIcon } from "../../icons";
 
 type Photo = {
     id: number;
@@ -21,12 +19,7 @@ interface Category {
 }
 
 export default function Gallery() {
-    const { isOpen: isModalPhotoOpen, openModal: openModalPhoto, closeModal: closeModalPhoto } = useModal();
-    const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
-    const [photos, setPhotos] = useState<Photo[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
 
     const fetchCategory = async () => {
@@ -44,14 +37,11 @@ export default function Gallery() {
             }
         } catch (error) {
             console.error("Server error:", error);
-            setError("Terjadi kesalahan saat mengambil data kategori.");
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
                 text: 'Terjadi kesalahan saat mengambil data kategori.',
             });
-        } finally {
-            setLoading(false);
         }
     };
 

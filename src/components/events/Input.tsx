@@ -7,12 +7,10 @@ import ComponentCard from '../common/ComponentCard';
 import Label from '../form/Label';
 import DatePicker from '../form/date-picker';
 import Input from '../form/input/InputField';
-import TextArea from '../form/input/TextArea';
 
 
 export default function EventInput() {
 
-    const [message, setMessage] = useState("");
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [eventDetails, setEventDetails] = useState({
         nama_event: "",
@@ -49,10 +47,6 @@ export default function EventInput() {
         setEventDetails({ ...eventDetails, [name]: value });
     };
 
-    const handleDescriptionChange = (value: string) => {
-        setEventDetails({ ...eventDetails, deskripsi_event: value });
-    };
-
     const handleDateChange = (tanggal_event: string) => {
         setEventDetails({ ...eventDetails, tanggal_event });
     };
@@ -82,7 +76,7 @@ export default function EventInput() {
         }
 
         try {
-            const response = await axios.post(
+            await axios.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/events`,
                 formData,
                 {

@@ -84,6 +84,7 @@ export default function EventsEdit({ id }: { id: number }) {
 
             console.log("📦 Data event:", data);
         } catch (error) {
+            console.error("Server error:", error);
             Swal.fire({
                 icon: "error",
                 title: "Gagal Mengambil Data",

@@ -1,8 +1,6 @@
 import React from "react";
 import Link from "next/link";
 
-import { GroupIcon } from "../../icons/index";
-
 interface ComponentCardProps {
   title: string;
   children: React.ReactNode;

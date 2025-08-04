@@ -7,14 +7,10 @@ import { useSidebar } from "../context/SidebarContext";
 import {
   ChevronDownIcon,
   DollarLineIcon,
-  GridIcon,
-  GroupIcon,
   HorizontaLDots,
-  ListIcon,
   PageIcon,
   TableIcon,
-  TaskIcon,
-  PieChartIcon
+  TaskIcon
 } from "../icons/index";
 
 type NavItem = {

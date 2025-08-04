@@ -1,17 +1,14 @@
 "use client";
-import React, { useState, useEffect, FC, ReactNode, FormEvent } from 'react';
+import React, { useState, FormEvent } from 'react';
 import ComponentCard from '../common/ComponentCard';
 import Label from '../form/Label';
 import Input from '../form/input/InputField';
-import TextArea from '../form/input/TextArea';
 import { useDropzone } from "react-dropzone";
-import { ChevronDownIcon, EyeCloseIcon, EyeIcon } from '../../icons';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
 export default function CategoryInput() {
 
-    const [message, setMessage] = useState("");
     const [imagePreview, setImagePreview] = useState<string | null>(null);
     const [categoryData, setCategoryData] = useState({
         judul: "",

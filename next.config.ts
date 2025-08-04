@@ -19,7 +19,7 @@ const nextConfig: NextConfig = {
 
   images: {
     // domains: ['apiateedoz.test'],
-    domains: ['127.0.0.1', 'localhost'],
+    domains: ['127.0.0.1', 'localhost', 'api.atedoz.id'],
   },
 
   /* config options here */

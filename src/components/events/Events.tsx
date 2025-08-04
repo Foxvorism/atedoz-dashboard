@@ -13,7 +13,6 @@ const Events: React.FC = () => {
     tanggal_event: string;
     updated_at: string; id: number; url: string; alt: string; title: string
   }[]>([]);
-  const [selectedEvent, setSelectedEvent] = useState<{ id: number; url: string; alt: string; title: string } | null>(null);
   // Function to fetch events from the API
   const fetchEvents = async () => {
     try {
@@ -54,7 +53,7 @@ const Events: React.FC = () => {
 
         try {
           // Pastikan id yang dikirimkan adalah valid
-          const res = await axios.delete(
+          await axios.delete(
             `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/events/${id}`,
             {
               headers: {
@@ -84,18 +83,6 @@ const Events: React.FC = () => {
     useEffect(() => {
         fetchEvents();
     }, []);
-
-    function formatTanggalIndo(dateString: string): string {
-      if (!dateString) return "-";
-      const date = new Date(dateString);
-      if (isNaN(date.getTime())) return "-";
-
-      return new Intl.DateTimeFormat("id-ID", {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-      }).format(date);
-    }
 
     const sortedEvents = [...events].sort((a, b) => {
         const dateA = new Date(a.tanggal_event).getTime();

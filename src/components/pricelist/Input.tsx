@@ -8,9 +8,6 @@ import Label from '../form/Label';
 import Input from '../form/input/InputField';
 
 export default function PricelistInput() {
-    const [message, setMessage] = useState("");
-    const [open, setOpen] = useState(false);
-    const [pricelist, setPricelistData] = useState([]);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
     const [pricelists, setPricelists] = useState({
@@ -97,7 +94,7 @@ export default function PricelistInput() {
         }
 
         try {
-            const res = await axios.post(
+            await axios.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/packages`,
                 bodyFormData,
                 {
@@ -119,7 +116,6 @@ export default function PricelistInput() {
             });
 
             setImagePreview(null);
-            setOpen(false);
             Swal.close();
 
             Swal.fire({
@@ -150,10 +146,6 @@ export default function PricelistInput() {
                     'Authorization': `Bearer ${token}`,
                 }
             });
-
-            if (response.data.data) {
-                setPricelistData(response.data.data);
-            }
         } catch (error) {
             if (axios.isAxiosError(error) && error.response && error.response.status === 401) {
                 Swal.fire({

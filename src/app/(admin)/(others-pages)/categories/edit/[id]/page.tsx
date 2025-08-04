@@ -10,10 +10,6 @@ export const metadata = {
     // other metadata
   };
 
-interface Props {
-  params: { id: string };
-}
-
 export default async function EditArticlePage({ params }:{ params: Promise<{ id: string }> }){
   const { id } = await params;
   const cookieStore = await cookies() 

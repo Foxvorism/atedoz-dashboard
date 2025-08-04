@@ -1,15 +1,13 @@
 "use client";
-import React, { useState, FC, ReactNode, FormEvent } from 'react';
+import React, { useState } from 'react';
 import ComponentCard from '../common/ComponentCard';
 import Label from '../form/Label';
-import Input from '../form/input/InputField';
 import Select from '../form/Select';
-import { ChevronDownIcon, EyeCloseIcon, EyeIcon, TimeIcon } from '../../icons';
+import { ChevronDownIcon, TimeIcon } from '../../icons';
 import DatePicker from '@/components/form/date-picker';
 
 export default function ScheduleInput() {
     
-  const [showPassword, setShowPassword] = useState(false);
   const studio = [
     { value: "admin", label: "Admin" },
     { value: "customer", label: "Customer" },

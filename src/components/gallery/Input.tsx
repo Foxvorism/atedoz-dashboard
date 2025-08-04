@@ -15,7 +15,6 @@ export default function GalleryInput({ id }: { id: number }) {
 
     // State untuk deskripsi dan studio
     const [deskripsi, setDeskripsi] = useState("");
-    const [studio, setStudio] = useState("");
     const pathname = usePathname();
 
     // Dropdown options studio
@@ -47,11 +46,6 @@ export default function GalleryInput({ id }: { id: number }) {
         },
         multiple: false,
     });
-
-    // Jika user pilih studio dari dropdown
-    const handleSelectChange = (value: string) => {
-        setStudio(value);
-    };
 
     // Kalau user browse manual file selain drag-drop
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,7 +95,7 @@ export default function GalleryInput({ id }: { id: number }) {
             formData.append("deskripsi", deskripsi);
             // formData.append("photo_studio_id", studio); // ✅ fix: gunakan variabel yang benar
 
-            const res = await axios.post(
+            await axios.post(
                 `${process.env.NEXT_PUBLIC_BACKEND_HOST}/api/galleries`,
                 formData,
                 {
@@ -124,7 +118,6 @@ export default function GalleryInput({ id }: { id: number }) {
             // Reset form
             setFoto(null);
             setDeskripsi("");
-            setStudio("");
             setImagePreview(null);
         } catch (error) {
             Swal.close();
