@@ -23,6 +23,8 @@ export default function GalleryInput({ id }: { id: number }) {
     //     { value: "2", label: "Atedoz Space Bogor Baru" },
     // ];
 
+    const MAX_IMAGE_SIZE = 2 * 1024 * 1024; // 2MB in bytes
+
     // Dropzone handler
     const onDrop = (acceptedFiles: File[]) => {
         if (acceptedFiles.length === 0) return;
@@ -51,6 +53,15 @@ export default function GalleryInput({ id }: { id: number }) {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
+        if (file.size > MAX_IMAGE_SIZE) {
+            Swal.fire({
+                icon: 'error',
+                title: 'File Terlalu Besar',
+                text: 'Ukuran gambar maksimal 2MB.',
+            });
+            return;
+        }
 
         setFoto(file);
 
